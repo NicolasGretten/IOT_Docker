@@ -1,0 +1,54 @@
+FROM php:8.1-fpm AS collectandverything-php
+
+RUN apt-get update && apt-get install -y \
+        supervisor \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libpng-dev \
+        git \
+        curl \
+        wget \
+        gnupg2 \
+        ca-certificates \
+        lsb-release \
+        apt-transport-https \
+        postgresql-client \
+        libonig-dev \
+        libxml2-dev \
+        libcurl4-openssl-dev \
+        libzip-dev \
+        postgresql-client \
+        libssl-dev \
+        libpq-dev \
+        cron \
+        nano 
+
+RUN apt-get update && apt-get install -y && docker-php-ext-install \
+	    gd \
+	    zip \
+	    pdo_pgsql \
+	    pgsql \
+	    soap \
+    && docker-php-ext-enable \
+	    gd \
+	    zip \
+	    pdo_pgsql \
+	    pgsql \
+	    soap \
+	&& docker-php-source delete
+
+# Set working directory
+WORKDIR /var/www
+
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Require laravel
+RUN composer global require "laravel/lumen-installer=~1.0"
+
+# Add user for laravel application
+RUN groupadd -g 1000 www
+RUN useradd -u 1000 -ms /bin/bash -g www www

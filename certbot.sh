@@ -1,0 +1,1 @@
+certbot -d api.collectandverything.io -d user.collectandverything.io -d address.collectandverything.io -d store.collectandverything.io
