@@ -23,8 +23,10 @@ RUN apt-get update && apt-get install -y \
         cron \
         nano 
 
-RUN apt-get update && apt-get install -y && docker-php-ext-install \
-	    gd \
+RUN apt-get update && apt-get install -y && docker-php-ext-configure \
+    gd --with-freetype --with-jpeg \
+    && docker-php-ext-install \
+	    -j$(nproc) gd \
 	    zip \
 	    pdo_pgsql \
 	    pgsql \
