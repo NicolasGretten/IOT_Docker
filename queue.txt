@@ -1,0 +1,5 @@
+email_created
+employee_created
+employee_updated
+admin_created
+admin_updated
