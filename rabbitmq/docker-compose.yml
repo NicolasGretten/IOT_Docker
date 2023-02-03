@@ -10,6 +10,8 @@ services:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
     tty: true
+    volumes:
+      - '~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/data/'
     networks:
       - app-network
 networks:
