@@ -12,8 +12,7 @@ RUN rm -R /var/www
 # Clone project
 ARG GITLAB_BRANCH
 
-
-RUN git clone -b staging http://deployment:glpat-ap6yyWeFE5UsENYTfu76@51.178.182.214/collect-verything/back/api.collect.verything.git /var/www
+RUN git clone -b master http://deployment:glpat-ap6yyWeFE5UsENYTfu76@51.178.182.214/collect-verything/back/api.collect.verything.git /var/www
 
 RUN echo /var/www/composer.json
 
