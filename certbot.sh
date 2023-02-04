@@ -1,1 +1,1 @@
-certbot -d api.collectandverything.io -d user.collectandverything.io -d address.collectandverything.io -d store.collectandverything.io -d image.collectandverything.io
+certbot -d api.collectandverything.io -d user.collectandverything.io -d address.collectandverything.io -d store.collectandverything.io -d image.collectandverything.io -d employee.collectandverything.io -d admin.collectandverything.io -d mail.collectandverything.io -d product.collectandverything.io -d cart.collectandverything.io -d order.collectandverything.io

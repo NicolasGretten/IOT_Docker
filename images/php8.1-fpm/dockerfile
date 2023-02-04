@@ -31,12 +31,14 @@ RUN apt-get update && apt-get install -y && docker-php-ext-configure \
 	    pdo_pgsql \
 	    pgsql \
 	    soap \
+        sockets \
     && docker-php-ext-enable \
 	    gd \
 	    zip \
 	    pdo_pgsql \
 	    pgsql \
 	    soap \
+        sockets \
 	&& docker-php-source delete
 
 # Set working directory
