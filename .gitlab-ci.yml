@@ -131,7 +131,7 @@ prod-pull-job:
   tags:
     - production
   script:
-    - sudo ls
+    - ls
   after_script:
     - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/production && sudo git pull origin production
 
