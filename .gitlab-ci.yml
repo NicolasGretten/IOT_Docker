@@ -133,7 +133,7 @@ prod-pull-job:
   script:
     - git config --global pull.ff true
   after_script:
-    - git pull --ff-only
+    - git pull origin production
 
 after_script:
   - sudo docker image prune --force
