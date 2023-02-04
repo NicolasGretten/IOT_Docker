@@ -133,7 +133,7 @@ prod-pull-job:
   script:
     - ls
   after_script:
-    - sudo git reset --hard origin/production && sudo git pull origin production
+    - git reset --hard origin/production && git pull origin production
 
 after_script:
   - sudo docker image prune --force
