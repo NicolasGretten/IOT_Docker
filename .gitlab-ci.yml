@@ -133,7 +133,7 @@ prod-pull-job:
   script:
     - echo "START"
   after_script:
-    - git reset --hard origin/production && git pull origin production
+    - git checkout production && git reset --hard origin/production && git pull origin production
 
 after_script:
   - sudo docker image prune --force
