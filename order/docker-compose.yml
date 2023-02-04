@@ -1,7 +1,7 @@
 version: '3'
 services:
   nginx:
-    container_name: user-nginx
+    container_name: order-nginx
     build:
       context: .
       dockerfile: nginx/dockerfile
@@ -13,14 +13,14 @@ services:
     networks:
       - app-network
   php-fpm:
-    container_name: user-php
+    container_name: order-php
     #env_file: '.env'
     build:
       context: .
       #args:
         #- GITLAB_BRANCH=${CI_COMMIT_BRANCH}
       dockerfile: php/dockerfile
-    image: 'collectandverything-user:latest'
+    image: 'collectandverything-order:latest'
     restart: unless-stopped
     tty: true
     working_dir: /var/www

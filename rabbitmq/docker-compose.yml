@@ -12,6 +12,8 @@ services:
     tty: true
     volumes:
       - '~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/data/'
+      - ./conf/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./conf/definitions.json:/etc/rabbitmq/definitions.json:ro
     networks:
       - app-network
 networks:

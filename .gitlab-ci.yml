@@ -37,7 +37,7 @@ staging-user-job:
     name: staging
     url: https://staging.collectandverything.fr
   script:
-    - cd /home/admin/docker/docker.collect.verything/account && sudo cp env/.env.test .env &&  sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env
+    - cd /home/admin/docker/docker.collect.verything/account && sudo cp env/.env.staging .env &&  sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env
   after_script:
     - cd /home/admin/docker/docker.collect.verything/account && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
 
@@ -56,7 +56,7 @@ staging-address-job:
   tags:
     - staging
   script:
-    - cd /home/admin/docker/docker.collect.verything/address && sudo cp env/.env.test .env && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
+    - cd /home/admin/docker/docker.collect.verything/address && sudo cp env/.env.staging .env && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
 
 staging-api-job:
   stage: staging-api
@@ -73,7 +73,7 @@ staging-api-job:
   tags:
     - staging
   script:
-    - cd /home/admin/docker/docker.collect.verything/api && sudo cp env/.env.test .env && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
+    - cd /home/admin/docker/docker.collect.verything/api && sudo cp env/.env.staging .env && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
 
 staging-image-job:
   stage: staging-image
@@ -90,7 +90,7 @@ staging-image-job:
   tags:
     - staging
   script:
-    - cd /home/admin/docker/docker.collect.verything/image && sudo cp env/.env.test .env && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
+    - cd /home/admin/docker/docker.collect.verything/image && sudo cp env/.env.staging .env && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
 
 staging-store-job:
   stage: staging-store
@@ -107,7 +107,7 @@ staging-store-job:
   tags:
     - staging
   script:
-    - cd /home/admin/docker/docker.collect.verything/store && sudo cp env/.env.test .env && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
+    - cd /home/admin/docker/docker.collect.verything/store && sudo cp env/.env.staging .env && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
 
 #test-wa-www-job:
 #  stage: test-wa-www

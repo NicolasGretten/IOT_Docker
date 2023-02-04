@@ -10,10 +10,10 @@ ADD conf/supervisor/supervisord.conf /etc/supervisor/
 RUN rm -R /var/www
 
 # Clone project
-#ARG GITLAB_BRANCH
-#RUN git clone -b $GITLAB_BRANCH http://deployment:glpat-ap6yyWeFE5UsENYTfu76@51.178.182.214/collect-verything/back/api.collect.verything.git /var/www
+ARG GITLAB_BRANCH
 
-RUN git clone -b master http://deployment:glpat-vTrp_A8dSKVfxPaYyP3V@51.178.182.214/collect-verything/back/cart.api.collect.verything.git /var/www
+
+RUN git clone -b $GITLAB_BRANCH http://deployment:glpat-vTrp_A8dSKVfxPaYyP3V@51.178.182.214/collect-verything/back/cart.api.collect.verything.git /var/www
 
 # Setup dependencies
 RUN export COMPOSER_ALLOW_SUPERUSER=1
@@ -29,4 +29,4 @@ RUN chown -R www-data:www-data /var/www
 # Expose port 9000 for php-fpm
 EXPOSE 9000
 
-#CMD ["/usr/bin/supervisord"]
+CMD ["/usr/bin/supervisord"]
