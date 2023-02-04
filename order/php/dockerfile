@@ -1,0 +1,32 @@
+FROM collectandverything-php
+
+# Set PHP configuration
+ADD conf/php/php.ini /usr/local/etc/php/
+
+# Set Supervisord configuration
+ADD conf/supervisor/supervisord.conf /etc/supervisor/
+
+# Clear /var/www
+RUN rm -R /var/www
+
+# Clone project
+ARG GITLAB_BRANCH
+
+
+RUN git clone -b $GITLAB_BRANCH http://deployment:glpat-E18RHG9vz9noaURfgv7f@51.178.182.214/collect-verything/back/user.api.collect.verything.git /var/www
+
+# Setup dependencies
+RUN export COMPOSER_ALLOW_SUPERUSER=1
+
+RUN composer install
+
+# Copy existing application directory permissions
+RUN chown -R www-data:www-data /var/www
+
+# Change scheduler.sh permission
+#RUN chmod o+x /var/www/bin/scheduler.sh
+
+# Expose port 9000 for php-fpm
+EXPOSE 9000
+
+CMD ["/usr/bin/supervisord"]
