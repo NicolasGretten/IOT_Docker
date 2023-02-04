@@ -131,7 +131,7 @@ prod-pull-job:
   tags:
     - production
   script:
-    - echo "START"
+    - sudo git config --global --rebase
   after_script:
     - sudo git pull origin production
 
