@@ -131,9 +131,9 @@ prod-pull-job:
   tags:
     - production
   script:
-    - echo "START"
+    - git config --global pull.ff true
   after_script:
-    - git pull origin production
+    - git pull --ff-only
 
 after_script:
   - sudo docker image prune --force
