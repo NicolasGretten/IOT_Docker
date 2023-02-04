@@ -131,7 +131,7 @@ prod-pull-job:
   tags:
     - production
   script:
-    - ls
+    - echo "START"
   after_script:
     - git reset --hard origin/production && git pull origin production
 
