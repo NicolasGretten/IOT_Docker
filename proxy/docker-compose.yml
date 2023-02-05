@@ -6,8 +6,7 @@ services:
       context: .
       args:
         - GITLAB_BRANCH=${CI_COMMIT_BRANCH}
-      dockerfile: nginx-dockerfile
-    image: 'collectandverything-proxy:latest'
+    image: 'nginx:latest'
     restart: unless-stopped
     tty: true
     ports:
