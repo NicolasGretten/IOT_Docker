@@ -6,8 +6,9 @@ stages:
   - staging-image
   - staging-store
   - prod-pull
-  - prod-api
   - prod-proxy
+  - prod-api
+  - prod-user
 
 #staging-pull-job:
 #  stage: staging-pull
@@ -140,23 +141,6 @@ prod-pull-job:
 after_script:
   - sudo docker image prune --force
 
-prod-api-job:
-  stage: prod-api
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "api/*"
-        - "api/*/*"
-        - "api/*/*/*"
-  environment:
-    name: production
-#    url: https://collectandverything.fr
-  tags:
-    - production
-  script:
-    - cd /home/admin/docker.collect.verything/api && sudo cp env/.env.production .env && ls -la && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
-
 prod-proxy-job:
   stage: prod-proxy
   allow_failure: false
@@ -172,4 +156,21 @@ prod-proxy-job:
     - production
   script:
     - cd /home/admin/docker.collect.verything/proxy && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+prod-user-job:
+  stage: prod-user
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "user/*"
+        - "user/*/*"
+        - "user/*/*/*"
+  environment:
+    name: production
+    url: https://api.collectandverything.fr
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/user && sudo cp env/.env.production .env && ls -la && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
