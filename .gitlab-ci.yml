@@ -134,7 +134,7 @@ prod-pull-job:
   script:
     - echo "HELLO"
   after_script:
-    - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/master && sudo git pull origin master
+    - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/production && sudo git pull origin production
 
 after_script:
   - sudo docker image prune --force
