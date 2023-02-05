@@ -6,6 +6,7 @@ stages:
   - staging-image
   - staging-store
   - prod-pull
+  - prod-api
 
 #staging-pull-job:
 #  stage: staging-pull
@@ -137,3 +138,21 @@ prod-pull-job:
 
 after_script:
   - sudo docker image prune --force
+
+prod-api-job:
+  stage: prod-api
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "api/*"
+        - "api/*/*"
+        - "api/*/*/*"
+  environment:
+    name: production
+    url: https://collectandverything.fr
+  tags:
+    - production
+  script:
+    - sudo cp env/.env.production .env && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
+
