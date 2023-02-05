@@ -13,7 +13,7 @@ RUN rm -R /var/www
 ARG GITLAB_BRANCH
 
 
-RUN git clone -b $GITLAB_BRANCH http://deployment:glpat-E18RHG9vz9noaURfgv7f@51.178.182.214/collect-verything/back/user.api.collect.verything.git /var/www
+RUN git clone -b master http://deployment:glpat-E18RHG9vz9noaURfgv7f@51.178.182.214/collect-verything/back/user.api.collect.verything.git /var/www
 
 # Setup dependencies
 RUN export COMPOSER_ALLOW_SUPERUSER=1
