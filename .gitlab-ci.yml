@@ -7,6 +7,7 @@ stages:
   - staging-store
   - prod-pull
   - prod-api
+  - prod-proxy
 
 #staging-pull-job:
 #  stage: staging-pull
@@ -150,9 +151,25 @@ prod-api-job:
         - "api/*/*/*"
   environment:
     name: production
-    url: https://collectandverything.fr
+#    url: https://collectandverything.fr
   tags:
     - production
   script:
     - cd /home/admin/docker.collect.verything/api && sudo cp env/.env.production .env && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+prod-proxy-job:
+  stage: prod-proxy
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "proxy/*"
+        - "proxy/*/*"
+        - "proxy/*/*/*"
+  environment:
+    name: production
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/proxy && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
