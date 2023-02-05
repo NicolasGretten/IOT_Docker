@@ -132,7 +132,7 @@ prod-pull-job:
   tags:
     - production
   script:
-    - echo "START"
+    - echo "HELLO"
   after_script:
     - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/master && sudo git pull origin master
 
