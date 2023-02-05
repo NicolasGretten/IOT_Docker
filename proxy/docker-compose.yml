@@ -10,7 +10,7 @@ services:
 #    image: 'collectandverything-proxy:latest'
     image: 'nginx'
     restart: unless-stopped
-    tty: true
+#    tty: true
     ports:
       - '80:80'
       - '443:443'
