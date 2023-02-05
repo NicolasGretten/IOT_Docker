@@ -132,7 +132,7 @@ prod-pull-job:
   tags:
     - production
   script:
-    - echo "HELLO"
+    - echo "HELLO" >> text.txt
   after_script:
     - sudo git reset --hard origin/master && sudo git pull origin master
 
