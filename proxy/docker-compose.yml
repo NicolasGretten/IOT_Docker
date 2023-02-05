@@ -2,10 +2,12 @@ version: '3'
 services:
   reverse-proxy:
     container_name: proxy
-    build:
-      context: .
-      args:
-        - GITLAB_BRANCH=${CI_COMMIT_BRANCH}
+#    build:
+#      context: .
+#      args:
+#        - GITLAB_BRANCH=${CI_COMMIT_BRANCH}
+#      dockerfile: nginx-dockerfile
+#    image: 'collectandverything-proxy:latest'
     image: 'nginx:latest'
     restart: unless-stopped
     tty: true
