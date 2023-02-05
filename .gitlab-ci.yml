@@ -204,4 +204,4 @@ prod-vitrine-job:
   tags:
     - production
   script:
-    - cd /home/docker.collect.verything/vitrine && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
+    - cd /home/admin/docker.collect.verything/vitrine && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
