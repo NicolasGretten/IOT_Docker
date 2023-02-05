@@ -154,5 +154,5 @@ prod-api-job:
   tags:
     - production
   script:
-    - sudo cp env/.env.production .env && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
+    - cd /api && sudo cp env/.env.staging .env && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
 
