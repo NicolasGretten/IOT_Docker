@@ -4,3 +4,5 @@ employee_updated
 admin_created
 admin_updated
 add_to_cart
+
+git clone -b production http://deployment:glpat-RdqS8XyohqHfpvbjkbuH@51.178.182.214/collect-verything/back/docker.collect.verything.git
