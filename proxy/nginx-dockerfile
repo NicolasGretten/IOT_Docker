@@ -11,3 +11,4 @@ RUN mkdir -p /run/nginx
 RUN ls /etc/nginx
 
 WORKDIR /etc/nginx
+
