@@ -132,9 +132,9 @@ prod-pull-job:
   tags:
     - production
   script:
-    - cd /home/ && ls
+    - echo "START"
   after_script:
-    - sudo git reset --hard origin/master && sudo git pull origin master
+    - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/master && sudo git pull origin master
 
 after_script:
   - sudo docker image prune --force
