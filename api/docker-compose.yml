@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: nginx/dockerfile
-    image: 'collectandverything-nginx'
+    image: 'nginx:alpine'
     restart: unless-stopped
     tty: true
     volumes:
@@ -14,13 +14,13 @@ services:
       - app-network
   php-fpm:
     container_name: api-php
-    #env_file: '.env'
+    env_file: '.env'
     build:
       context: .
-      #args:
-        #- GITLAB_BRANCH=${CI_COMMIT_BRANCH}
+      args:
+        - GITLAB_BRANCH=${CI_COMMIT_BRANCH}
       dockerfile: php/dockerfile
-    image: 'collectandverything-api:latest'
+    image: 'collectandverything-api'
     restart: unless-stopped
     tty: true
     working_dir: /var/www
