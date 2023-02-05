@@ -9,6 +9,7 @@ stages:
   - prod-proxy
   - prod-api
   - prod-user
+  - prod-vitrine
 
 #staging-pull-job:
 #  stage: staging-pull
@@ -191,3 +192,16 @@ prod-user-job:
   script:
     - cd /home/admin/docker.collect.verything/user && sudo cp env/.env.production .env && ls -la && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
+prod-vitrine-job:
+  stage: prod-vitrine
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "vitrine/*"
+        - "vitrine/*/*"
+        - "vitrine/*/*/*"
+  tags:
+    - production
+  script:
+    - cd /home/docker.collect.verything/vitrine && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
