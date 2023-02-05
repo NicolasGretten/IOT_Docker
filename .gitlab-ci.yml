@@ -157,6 +157,23 @@ prod-proxy-job:
   script:
     - cd /home/admin/docker.collect.verything/proxy && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
+prod-api-job:
+  stage: prod-api
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "api/*"
+        - "api/*/*"
+        - "api/*/*/*"
+  environment:
+    name: production
+    url: https://api.collectandverything.fr
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/api && sudo cp env/.env.production .env && ls -la && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
 prod-user-job:
   stage: prod-user
   allow_failure: false
