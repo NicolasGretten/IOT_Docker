@@ -2,10 +2,6 @@ version: '3'
 services:
   reverse-proxy:
     container_name: proxy
-    build:
-      context: .
-      args:
-        - GITLAB_BRANCH=${CI_COMMIT_BRANCH}
     image: nginx
     restart: unless-stopped
     tty: true
