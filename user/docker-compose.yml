@@ -14,11 +14,11 @@ services:
       - app-network
   php-fpm:
     container_name: user-php
-    #env_file: '.env'
+    env_file: '.env'
     build:
       context: .
-      #args:
-        #- GITLAB_BRANCH=${CI_COMMIT_BRANCH}
+      args:
+        - GITLAB_BRANCH=${CI_COMMIT_BRANCH}
       dockerfile: php/dockerfile
     image: 'collectandverything-user:latest'
     restart: unless-stopped
