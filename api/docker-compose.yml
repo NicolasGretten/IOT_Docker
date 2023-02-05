@@ -6,6 +6,9 @@ services:
       context: .
       dockerfile: nginx/dockerfile
     image: 'nginx:alpine'
+    ports:
+      - '80:80'
+      - '443:443'
     restart: unless-stopped
     tty: true
     volumes:
@@ -21,6 +24,8 @@ services:
         - GITLAB_BRANCH=${CI_COMMIT_BRANCH}
       dockerfile: php/dockerfile
     image: 'collectandverything-api'
+    ports:
+      - '9000:9000'
     restart: unless-stopped
     tty: true
     working_dir: /var/www
