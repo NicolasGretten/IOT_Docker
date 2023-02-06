@@ -10,6 +10,7 @@ stages:
   - prod-api
   - prod-user
   - prod-vitrine
+  - prod-boutique
 
 #staging-pull-job:
 #  stage: staging-pull
@@ -205,3 +206,17 @@ prod-vitrine-job:
     - production
   script:
     - cd /home/admin/docker.collect.verything/vitrine && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+prod-boutique-job:
+  stage: prod-boutique
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "boutique/*"
+        - "boutique/*/*"
+        - "boutique/*/*/*"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/boutique && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d

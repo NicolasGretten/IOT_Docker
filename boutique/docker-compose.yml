@@ -1,0 +1,17 @@
+version: '3'
+services:
+  react:
+    container_name: boutique
+    build:
+      context: .
+      args:
+        - GITLAB_BRANCH=${CI_COMMIT_BRANCH}
+      dockerfile: dockerfile/react/dockerfile
+    image: 'collectandverything-boutique:latest'
+    restart: unless-stopped
+    tty: true
+    networks:
+      - collectandverything
+networks:
+  collectandverything:
+    external: true
