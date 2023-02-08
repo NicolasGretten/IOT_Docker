@@ -2,7 +2,7 @@ FROM collectandverything-react:latest
 
 # Clone project
 ARG GITLAB_BRANCH
-RUN git clone -b GITLAB_BRANCH http://deployment:glpat--z_2WNVnzefZsrxwAMkt@51.178.182.214/collect-verything/front/dashboard-collect-verything.git / \
+RUN git clone -b GITLAB_BRANCH http://deployment:glpat--z_2WNVnzefZsrxwAMkt@51.178.182.214/collect-verything/front/dashboard-collect-verything.git /app
 RUN npm i -f
 
 RUN if [[ "$GITLAB_BRANCH" = "staging" ]] ; then npm run build ; else echo skipping staging ; fi
