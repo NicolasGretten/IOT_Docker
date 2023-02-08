@@ -8,5 +8,5 @@ RUN npm i -f
 RUN if [[ "$GITLAB_BRANCH" = "staging" ]] ; then npm run build ; else echo skipping staging ; fi
 RUN if [[ "$GITLAB_BRANCH" = "production" ]] ; then npm run build ; else echo skipping production ; fi
 
-CMD [ "npm", "run", "start"]
+CMD [ "npm", "run", "start", "--port=3000"]
 
