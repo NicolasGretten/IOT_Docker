@@ -14,10 +14,10 @@ services:
       - '~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/data/'
       - ./conf/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
       - ./conf/definitions.json:/etc/rabbitmq/definitions.json:ro
+
     networks:
-      - app-network
+      - collectandverything
 networks:
-  app-network:
-    external:
-      name: collectandverything
+  collectandverything:
+    external: true
 

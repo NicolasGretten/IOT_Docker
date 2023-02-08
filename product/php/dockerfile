@@ -12,7 +12,6 @@ RUN rm -R /var/www
 # Clone project
 ARG GITLAB_BRANCH
 
-
 RUN git clone -b $GITLAB_BRANCH http://deployment:glpat-w4sxDSiLb_kxaviZSMrS@51.178.182.214/collect-verything/back/product.api.collect.verything.git /var/www
 
 # Setup dependencies

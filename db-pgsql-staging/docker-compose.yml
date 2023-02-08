@@ -1,0 +1,23 @@
+version: '3'
+services:
+  db:
+    container_name: postgresql-staging
+    image: 'postgres:13.2'
+    restart: unless-stopped
+    ports:
+      - '5433:5432'
+    command: postgres -c 'max_connections=200'
+    environment:
+      POSTGRES_USER: collectandverything
+      POSTGRES_PASSWORD: 62HnPy4d5S2Dcv
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres/
+    networks:
+      - collectandverything-staging
+networks:
+  collectandverything-staging:
+    external: true
+volumes:
+  postgres:
+    driver: local

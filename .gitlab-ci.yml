@@ -1,132 +1,276 @@
 stages:
   - staging-pull
-  - staging-user
   - staging-address
+  - staging-admin
   - staging-api
+  - staging-boutique
+  - staging-cart
+  - staging-dashboard
+  - staging-employee
   - staging-image
+  - staging-mail
+  - staging-order
+  - staging-product
   - staging-store
+  - staging-user
+  - staging-vitrine
   - prod-pull
-  - prod-proxy
+  - prod-address
+  - prod-admin
   - prod-api
+  - prod-boutique
+  - prod-cart
+  - prod-dashboard
+  - prod-employee
+  - prod-image
+  - prod-mail
+  - prod-order
+  - prod-product
+  - prod-store
   - prod-user
   - prod-vitrine
-  - prod-boutique
+  - proxy
 
-#staging-pull-job:
-#  stage: staging-pull
-#  allow_failure: false
-#  rules:
-#    - if: $CI_COMMIT_BRANCH == "staging"
-#  tags:
-#    - staging
-#  script:
-#    - echo "START"
-#  environment:
-#    name: staging
-#    url: https://staging.collectandverything.fr
-#  after_script:
-#    - cd /home/admin/docker/docker.collect.verything && sudo git reset --hard origin/staging && sudo git pull origin staging
+staging-pull-job:
+  stage: staging-pull
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+  tags:
+    - staging
+  script:
+    - echo "HELLO"
+  after_script:
+    - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/staging && sudo git pull origin staging
 
-#staging-user-job:
-#  stage: staging-user
-#  allow_failure: false
-#  rules:
-#    - if: $CI_COMMIT_BRANCH == "staging"
-#      changes:
-#        - "user/*"
-#        - "user/*/*"
-#        - "user/*/*/*"
-#  tags:
-#    - staging
-#  environment:
-#    name: staging
-#    url: https://staging.collectandverything.fr
-#  script:
-#    - cd /home/admin/docker/docker.collect.verything/account && sudo cp env/.env.staging .env &&  sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env
-#  after_script:
-#    - cd /home/admin/docker/docker.collect.verything/account && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
-#
-#staging-address-job:
-#  stage: staging-address
-#  allow_failure: false
-#  rules:
-#    - if: $CI_COMMIT_BRANCH == "test"
-#      changes:
-#        - "address/*"
-#        - "address/*/*"
-#        - "address/*/*/*"
-#  environment:
-#    name: staging
-#    url: https://staging.collectandverything.fr
-#  tags:
-#    - staging
-#  script:
-#    - cd /home/admin/docker/docker.collect.verything/address && sudo cp env/.env.staging .env && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
-#
-#staging-api-job:
-#  stage: staging-api
-#  allow_failure: false
-#  rules:
-#    - if: $CI_COMMIT_BRANCH == "staging"
-#      changes:
-#        - "api/*"
-#        - "api/*/*"
-#        - "api/*/*/*"
-#  environment:
-#    name: staging
-#    url: https://staging.collectandverything.fr
-#  tags:
-#    - staging
-#  script:
-#    - cd /home/admin/docker/docker.collect.verything/api && sudo cp env/.env.staging .env && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
-#
-#staging-image-job:
-#  stage: staging-image
-#  allow_failure: false
-#  rules:
-#    - if: $CI_COMMIT_BRANCH == "staging"
-#      changes:
-#        - "image/*"
-#        - "image/*/*"
-#        - "image/*/*/*"
-#  environment:
-#    name: staging
-#    url: https://staging.collectandverything.fr
-#  tags:
-#    - staging
-#  script:
-#    - cd /home/admin/docker/docker.collect.verything/image && sudo cp env/.env.staging .env && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
-#
-#staging-store-job:
-#  stage: staging-store
-#  allow_failure: false
-#  rules:
-#    - if: $CI_COMMIT_BRANCH == "staging"
-#      changes:
-#        - "store/*"
-#        - "store/*/*"
-#        - "store/*/*/*"
-#  environment:
-#    name: staging
-#    url: https://staging.collectandverything.fr
-#  tags:
-#    - staging
-#  script:
-#    - cd /home/admin/docker/docker.collect.verything/store && sudo cp env/.env.staging .env && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
+staging-address-job:
+  stage: staging-address
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "address/*"
+        - "address/*/*"
+        - "address/*/*/*"
+  environment:
+    name: staging
+    url: https://staging.api.collectandverything.fr
+  tags:
+    - staging
+  script:
+    - cd /home/admin/docker.collect.verything/address && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-#test-wa-www-job:
-#  stage: test-wa-www
-#  allow_failure: false
-#  rules:
-#    - if: $CI_COMMIT_BRANCH == "test"
-#      changes:
-#        - "wa-www/*"
-#        - "wa-www/*/*"
-#        - "wa-www/*/*/*"
-#  tags:
-#    - srv-test
-#  script:
-#    - cd /home/admin/docker/weu1-d-001.docker.hopnspace.io/wa-www && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker-compose build --no-cache && sudo -E docker-compose up -d
+staging-admin-job:
+  stage: staging-admin
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "admin/*"
+        - "admin/*/*"
+        - "admin/*/*/*"
+  environment:
+    name: staging
+    url: https://staging.api.collectandverything.fr
+  tags:
+    - staging
+  script:
+    - cd /home/admin/docker.collect.verything/admin && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+staging-api-job:
+  stage: staging-api
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "api/*"
+        - "api/*/*"
+        - "api/*/*/*"
+  environment:
+    name: staging
+    url: https://staging.api.collectandverything.fr
+  tags:
+    - staging
+  script:
+    - cd /home/admin/docker.collect.verything/api && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+staging-boutique-job:
+  stage: staging-boutique
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "boutique/*"
+        - "boutique/*/*"
+        - "boutique/*/*/*"
+  tags:
+    - staging
+  script:
+    - cd /home/admin/docker.collect.verything/boutique && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+staging-cart-job:
+  stage: staging-cart
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "cart/*"
+        - "cart/*/*"
+        - "cart/*/*/*"
+  environment:
+    name: staging
+    url: https://staging.api.collectandverything.fr
+  tags:
+    - staging
+  script:
+    - cd /home/admin/docker.collect.verything/cart && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+staging-dashboard-job:
+  stage: staging-dashboard
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "dashboard/*"
+        - "dashboard/*/*"
+        - "dashboard/*/*/*"
+  tags:
+    - staging
+  script:
+    - cd /home/admin/docker.collect.verything/dashboard && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+staging-employee-job:
+  stage: staging-employee
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "employee/*"
+        - "employee/*/*"
+        - "employee/*/*/*"
+  environment:
+    name: staging
+    url: https://staging.api.collectandverything.fr
+  tags:
+    - staging
+  script:
+    - cd /home/admin/docker.collect.verything/employee && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+staging-image-job:
+  stage: staging-image
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "image/*"
+        - "image/*/*"
+        - "image/*/*/*"
+  environment:
+    name: staging
+    url: https://staging.api.collectandverything.fr
+  tags:
+    - staging
+  script:
+    - cd /home/admin/docker.collect.verything/image && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+staging-mail-job:
+  stage: staging-mail
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "mail/*"
+        - "mail/*/*"
+        - "mail/*/*/*"
+  environment:
+    name: staging
+    url: https://staging.api.collectandverything.fr
+  tags:
+    - staging
+  script:
+    - cd /home/admin/docker.collect.verything/mail && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+staging-order-job:
+  stage: staging-order
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "order/*"
+        - "order/*/*"
+        - "order/*/*/*"
+  environment:
+    name: staging
+    url: https://staging.api.collectandverything.fr
+  tags:
+    - staging
+  script:
+    - cd /home/admin/docker.collect.verything/order && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+staging-product-job:
+  stage: staging-product
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "product/*"
+        - "product/*/*"
+        - "product/*/*/*"
+  environment:
+    name: staging
+    url: https://staging.api.collectandverything.fr
+  tags:
+    - staging
+  script:
+    - cd /home/admin/docker.collect.verything/product && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+staging-store-job:
+  stage: staging-store
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "store/*"
+        - "store/*/*"
+        - "store/*/*/*"
+  environment:
+    name: staging
+    url: https://staging.api.collectandverything.fr
+  tags:
+    - staging
+  script:
+    - cd /home/admin/docker.collect.verything/store && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+staging-user-job:
+  stage: staging-user
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "user/*"
+        - "user/*/*"
+        - "user/*/*/*"
+  environment:
+    name: staging
+    url: https://staging.api.collectandverything.fr
+  tags:
+    - staging
+  script:
+    - cd /home/admin/docker.collect.verything/user && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+staging-vitrine-job:
+  stage: staging-vitrine
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "vitrine/*"
+        - "vitrine/*/*"
+        - "vitrine/*/*/*"
+  tags:
+    - staging
+  script:
+    - cd /home/admin/docker.collect.verything/vitrine && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 prod-pull-job:
   stage: prod-pull
@@ -140,24 +284,39 @@ prod-pull-job:
   after_script:
     - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/production && sudo git pull origin production
 
-after_script:
-  - sudo docker image prune --force
-
-prod-proxy-job:
-  stage: prod-proxy
+prod-address-job:
+  stage: prod-address
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
       changes:
-        - "proxy/*"
-        - "proxy/*/*"
-        - "proxy/*/*/*"
+        - "address/*"
+        - "address/*/*"
+        - "address/*/*/*"
   environment:
     name: production
+    url: https://api.collectandverything.fr
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/proxy && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/address && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+prod-admin-job:
+  stage: prod-admin
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "admin/*"
+        - "admin/*/*"
+        - "admin/*/*/*"
+  environment:
+    name: production
+    url: https://api.collectandverything.fr
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/admin && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 prod-api-job:
   stage: prod-api
@@ -174,7 +333,154 @@ prod-api-job:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/api && sudo cp env/.env.production .env && ls -la && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/api && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+prod-boutique-job:
+  stage: prod-boutique
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "boutique/*"
+        - "boutique/*/*"
+        - "boutique/*/*/*"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/boutique && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+prod-cart-job:
+  stage: prod-cart
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "cart/*"
+        - "cart/*/*"
+        - "cart/*/*/*"
+  environment:
+    name: production
+    url: https://api.collectandverything.fr
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/cart && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+prod-dashboard-job:
+  stage: prod-dashboard
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "dashboard/*"
+        - "dashboard/*/*"
+        - "dashboard/*/*/*"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/dashboard && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+prod-employee-job:
+  stage: prod-employee
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "employee/*"
+        - "employee/*/*"
+        - "employee/*/*/*"
+  environment:
+    name: production
+    url: https://api.collectandverything.fr
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/employee && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+prod-image-job:
+  stage: prod-image
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "image/*"
+        - "image/*/*"
+        - "image/*/*/*"
+  environment:
+    name: production
+    url: https://api.collectandverything.fr
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/image && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+prod-mail-job:
+  stage: prod-mail
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "mail/*"
+        - "mail/*/*"
+        - "mail/*/*/*"
+  environment:
+    name: production
+    url: https://api.collectandverything.fr
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/mail && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+prod-order-job:
+  stage: prod-order
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "order/*"
+        - "order/*/*"
+        - "order/*/*/*"
+  environment:
+    name: production
+    url: https://api.collectandverything.fr
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/order && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+prod-product-job:
+  stage: prod-product
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "product/*"
+        - "product/*/*"
+        - "product/*/*/*"
+  environment:
+    name: production
+    url: https://api.collectandverything.fr
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/product && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+prod-store-job:
+  stage: prod-store
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "store/*"
+        - "store/*/*"
+        - "store/*/*/*"
+  environment:
+    name: production
+    url: https://api.collectandverything.fr
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/store && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 prod-user-job:
   stage: prod-user
@@ -191,7 +497,7 @@ prod-user-job:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/user && sudo cp env/.env.production .env && ls -la && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/user && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 prod-vitrine-job:
   stage: prod-vitrine
@@ -207,16 +513,22 @@ prod-vitrine-job:
   script:
     - cd /home/admin/docker.collect.verything/vitrine && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-prod-boutique-job:
-  stage: prod-boutique
+proxy-job:
+  stage: prod-proxy
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
       changes:
-        - "boutique/*"
-        - "boutique/*/*"
-        - "boutique/*/*/*"
+        - "proxy/*"
+        - "proxy/*/*"
+        - "proxy/*/*/*"
+  environment:
+    name: production
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/boutique && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/proxy && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+  when: manual
+
+after_script:
+  - sudo docker image prune --force

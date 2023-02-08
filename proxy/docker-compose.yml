@@ -18,7 +18,10 @@ services:
       - './conf/letsencrypt/:/etc/letsencrypt/'
     networks:
       - collectandverything
+      - collectandverything-staging
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 networks:
   collectandverything:
+    external : true
+  collectandverything-staging:
     external : true
