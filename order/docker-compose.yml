@@ -15,11 +15,11 @@ services:
       - collectandverything-staging
   php-fpm:
     container_name: order-php
-    #env_file: '.env'
+    env_file: '.env'
     build:
       context: .
-      #args:
-        #- GITLAB_BRANCH=${CI_COMMIT_BRANCH}
+      args:
+        - GITLAB_BRANCH=${CI_COMMIT_BRANCH}
       dockerfile: php/dockerfile
     image: 'collectandverything-order:latest'
     restart: unless-stopped
