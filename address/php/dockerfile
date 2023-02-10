@@ -1,32 +1,34 @@
-FROM collectandverything-php
+FROM php:8.1-fpm
 
-# Set PHP configuration
-ADD conf/php/php.ini /usr/local/etc/php/
+# Arguments defined in docker-compose.yml
+ARG user
+ARG uid
 
-# Set Supervisord configuration
-ADD conf/supervisor/supervisord.conf /etc/supervisor/
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip
 
-# Clear /var/www
-RUN rm -R /var/www
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Clone project
-ARG GITLAB_BRANCH
+# Install PHP extensions
+RUN docker-php-ext-install pdo_pgsq pgsql mbstring exif pcntl bcmath gd soap sockets
 
+# Get latest Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN git clone -b $GITLAB_BRANCH http://deployment:glpat-1p2gFt8GPiX3yUz6uXwN@51.178.182.214/collect-verything/back/address.api.collect.verything.git /var/www
+# Create system user to run Composer and Artisan Commands
+RUN useradd -G www-data,root -u $uid -d /home/$user $user
+RUN mkdir -p /home/$user/.composer && \
+    chown -R $user:$user /home/$user
 
-# Setup dependencies
-RUN export COMPOSER_ALLOW_SUPERUSER=1
+# Set working directory
+WORKDIR /var/www
 
-RUN composer install
-
-# Copy existing application directory permissions
-RUN chown -R www-data:www-data /var/www
-
-# Change scheduler.sh permission
-#RUN chmod o+x /var/www/bin/scheduler.sh
-
-# Expose port 9000 for php-fpm
-EXPOSE 9000
-
-CMD ["/usr/bin/supervisord"]
+USER $user
