@@ -18,7 +18,7 @@ services:
     build:
       context: .
       args:
-        - GITLAB_BRANCH=${CI_COMMIT_BRANCH}
+        - GITLAB_BRANCH=${APP_ENV}
       dockerfile: php/dockerfile
     image: 'collectandverything-address:latest'
     restart: unless-stopped
