@@ -1,13 +1,18 @@
-version: '3.7'
+version: '3'
 services:
   nginx:
     container_name: address-nginx
-    image: nginxinc/nginx-unprivileged
+    build:
+      context: .
+      dockerfile: nginx/dockerfile
+    image: 'nginx:alpine'
     restart: unless-stopped
+    tty: true
     volumes:
       - './conf/nginx/nginx.conf:/etc/nginx/nginx.conf'
     networks:
       - collectandverything
+      - collectandverything-staging
   php-fpm:
     container_name: address-php
     env_file: '.env'
