@@ -5,7 +5,7 @@ services:
     build:
       context: .
       args:
-        - GITLAB_BRANCH=${APP_ENV}
+        - GITLAB_BRANCH=${CI_COMMIT_BRANCH}
       dockerfile: dockerfile/react/dockerfile
     image: 'collectandverything-boutique:latest'
     restart: unless-stopped
