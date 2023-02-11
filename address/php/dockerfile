@@ -1,10 +1,10 @@
 FROM collectandverything-php
 
 # Set PHP configuration
-#ADD conf/php/php.ini /usr/local/etc/php/
+ADD conf/php/php.ini /usr/local/etc/php/
 
 # Set Supervisord configuration
-#ADD conf/supervisor/supervisord.conf /etc/supervisor/
+ADD conf/supervisor/supervisord.conf /etc/supervisor/
 
 # Clear /var/www
 RUN rm -R /var/www
@@ -15,7 +15,6 @@ ARG GITLAB_BRANCH
 RUN git clone -b $GITLAB_BRANCH http://deployment:glpat-1p2gFt8GPiX3yUz6uXwN@51.178.182.214/collect-verything/back/address.api.collect.verything.git /var/www
 
 # Setup dependencies
-
 RUN composer install
 
 # Copy existing application directory permissions
