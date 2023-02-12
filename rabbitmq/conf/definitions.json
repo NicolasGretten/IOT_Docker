@@ -43,6 +43,10 @@
     {"name":"store_owner_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"store_owner_updated","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"store_owner_deleted","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"image_store","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+
+    {"name":"store_image","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"store_logo","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
 
     {"name":"add_to_cart","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
 
