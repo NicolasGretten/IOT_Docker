@@ -4,8 +4,8 @@ services:
     container_name: proxy
     build:
       context: .
-      args:
-        - GITLAB_BRANCH=${APP_ENV}
+#      args:
+#        - GITLAB_BRANCH=${APP_ENV}
       dockerfile: nginx-dockerfile
     image: 'collectandverything-proxy:latest'
     restart: unless-stopped
@@ -18,10 +18,7 @@ services:
       - './conf/letsencrypt/:/etc/letsencrypt/'
     networks:
       - collectandverything
-      - collectandverything-staging
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 networks:
   collectandverything:
-    external : true
-  collectandverything-staging:
     external : true
