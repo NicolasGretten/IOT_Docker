@@ -1,0 +1,8 @@
+[submodule "app"]
+	path = app
+	url = http://51.178.182.214/collect-verything/front/vitrine-collect-verything.git
+	branch = dev
+[submodule "www.staging.collectandverything.fr"]
+	path = www.staging.collectandverything.fr
+	url = http://51.178.182.214/collect-verything/front/vitrine-collect-verything.git
+	branch = staging

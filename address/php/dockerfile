@@ -12,12 +12,9 @@ RUN rm -R /var/www
 # Clone project
 ARG GITLAB_BRANCH
 
-
 RUN git clone -b $GITLAB_BRANCH http://deployment:glpat-1p2gFt8GPiX3yUz6uXwN@51.178.182.214/collect-verything/back/address.api.collect.verything.git /var/www
 
 # Setup dependencies
-RUN export COMPOSER_ALLOW_SUPERUSER=1
-
 RUN composer install
 
 # Copy existing application directory permissions
@@ -29,4 +26,4 @@ RUN chown -R www-data:www-data /var/www
 # Expose port 9000 for php-fpm
 EXPOSE 9000
 
-CMD ["/usr/bin/supervisord"]
+#CMD ["/usr/bin/supervisord"]

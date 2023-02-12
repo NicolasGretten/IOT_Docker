@@ -5,28 +5,27 @@ services:
     build:
       context: .
       dockerfile: nginx/dockerfile
-    image: 'collectandverything-nginx'
+    image: 'nginx:alpine'
     restart: unless-stopped
     tty: true
     volumes:
       - './conf/nginx/nginx.conf:/etc/nginx/nginx.conf'
     networks:
-      - app-network
+      - collectandverything
   php-fpm:
     container_name: address-php
-    #env_file: '.env'
+    env_file: '.env'
     build:
       context: .
-      #args:
-        #- GITLAB_BRANCH=${CI_COMMIT_BRANCH}
+      args:
+        - GITLAB_BRANCH=${APP_ENV}
       dockerfile: php/dockerfile
-    image: 'collectandverything-user:latest'
+    image: 'collectandverything-address:latest'
     restart: unless-stopped
     tty: true
     working_dir: /var/www
     networks:
-      - app-network       
+      - collectandverything
 networks:
-  app-network:
-    external:
-      name: collectandverything
+  collectandverything:
+    external: true

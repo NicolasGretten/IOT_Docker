@@ -14,11 +14,10 @@ services:
     volumes:
       - postgres:/data/postgres/
     networks:
-      - app-network
+      - collectandverything
 networks:
-  app-network:
-    external:
-      name: collectandverything
+  collectandverything:
+    external: true
 volumes:
   postgres:
     driver: local
