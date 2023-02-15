@@ -14,6 +14,7 @@ stages:
   - staging-store
   - staging-user
   - staging-vitrine
+  - staging-rabbitmq
   - prod-pull
   - prod-address
   - prod-admin
@@ -29,6 +30,7 @@ stages:
   - prod-store
   - prod-user
   - prod-vitrine
+  - prod-rabbitmq
   - proxy
 
 staging-pull-job:
@@ -272,6 +274,20 @@ staging-vitrine-job:
   script:
     - cd /home/admin/docker.collect.verything/vitrine && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
+staging-rabbitmq-job:
+  stage: staging-rabbitmq
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "rabbitmq/*"
+        - "rabbitmq/*/*"
+        - "rabbitmq/*/*/*"
+  tags:
+    - staging
+  script:
+    - cd /home/admin/docker.collect.verything/rabbitmq && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
 prod-pull-job:
   stage: prod-pull
   allow_failure: false
@@ -512,6 +528,21 @@ prod-vitrine-job:
     - production
   script:
     - cd /home/admin/docker.collect.verything/vitrine && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+
+prod-rabbitmq-job:
+  stage: prod-rabbitmq
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "rabbitmq/*"
+        - "rabbitmq/*/*"
+        - "rabbitmq/*/*/*"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/rabbitmq && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 proxy-job:
   stage: proxy
