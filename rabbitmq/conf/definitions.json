@@ -40,9 +40,9 @@
     {"name":"user_updated","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"user_deleted","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
 
-    {"name":"owner_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"owner_updated","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"owner_deleted","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"store_owner_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"store_owner_updated","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"store_owner_deleted","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"image_store","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
 
     {"name":"store_image","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
