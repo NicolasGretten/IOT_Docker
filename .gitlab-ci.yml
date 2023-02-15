@@ -542,7 +542,7 @@ prod-rabbitmq-job:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/rabbitmq && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/rabbitmq && sudo -E docker compose down && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 proxy-job:
   stage: proxy
