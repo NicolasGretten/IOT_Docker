@@ -3,7 +3,7 @@
   "users": [
     {
       "name": "collectandverything",
-      "password_hash": "Ym4DcUcTDc5jwB5P",
+      "password": "5140d0aeafa7d10b44ffc270c44cd4bd4e66ed2cbe35bf3dbc4100fe5462feb0",
       "hashing_algorithm": "rabbit_password_hashing_sha256",
       "tags": [
         "administrator"
