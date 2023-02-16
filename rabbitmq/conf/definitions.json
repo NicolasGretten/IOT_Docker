@@ -18,7 +18,7 @@
   ],
   "permissions": [
     {
-      "user": "guest",
+      "user": "collectandverything",
       "vhost": "/",
       "configure": ".*",
       "write": ".*",
