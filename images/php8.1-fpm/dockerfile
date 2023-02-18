@@ -31,12 +31,14 @@ RUN apt-get update && apt-get install -y && docker-php-ext-configure \
 	    pdo_pgsql \
 	    pgsql \
 	    soap \
+        sockets \
     && docker-php-ext-enable \
 	    gd \
 	    zip \
 	    pdo_pgsql \
 	    pgsql \
 	    soap \
+        sockets \
 	&& docker-php-source delete
 
 # Set working directory
@@ -49,7 +51,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Require laravel
-RUN composer global require "laravel/lumen-installer=~1.0"
+RUN composer global require "laravel/installer"
 
 # Add user for laravel application
 RUN groupadd -g 1000 www

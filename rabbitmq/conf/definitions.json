@@ -1,0 +1,89 @@
+
+{
+  "users": [
+    {
+      "name": "collectandverything",
+      "password": "Ym4DcUcTDc5jwB5P",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [
+        "administrator"
+      ],
+      "limits": {}
+    }
+  ],
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "collectandverything",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "queues":[
+    {"name":"email_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+
+    {"name":"employee_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"employee_updated","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"employee_deleted","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+
+    {"name":"admin_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"admin_updated","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"admin_deleted","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+
+    {"name":"user_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"user_updated","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"user_deleted","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+
+    {"name":"store_owner_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"store_owner_updated","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"store_owner_deleted","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"image_logo","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"image_store","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"image_product","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+
+    {"name":"store_image","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"store_logo","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"image_product","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+
+    {"name":"add_to_cart","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+
+    {"name":"order_request_store","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"order_request_cart","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"order_request_user","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"store_response_order","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"cart_response_order","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"user_response_order","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+
+    {"name":"create_order","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+
+    {"name":"product_image","vhost":"/","durable":true,"auto_delete":false,"arguments":{}}
+  ],
+
+  "exchanges": [
+    {
+      "name": "externally_configured_exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "externally_configured_exchange",
+      "vhost": "/",
+      "destination": "externally_configured_queue",
+      "destination_type": "queue",
+      "routing_key": "externally_configured_queue",
+      "arguments": {}
+    }
+  ]
+}
