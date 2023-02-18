@@ -562,4 +562,4 @@ proxy-job:
   when: manual
 
 after_script:
-  - sudo docker image prune --force
+  - cd /home/admin/docker.collect.verything && sudo docker image prune --force
