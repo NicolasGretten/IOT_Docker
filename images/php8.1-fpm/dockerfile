@@ -21,7 +21,11 @@ RUN apt-get update && apt-get install -y \
         libssl-dev \
         libpq-dev \
         cron \
-        nano 
+        nano \
+        libmemcached-dev \
+        zlib1g-dev \
+        memcached \
+    && pecl install memcached
 
 RUN apt-get update && apt-get install -y && docker-php-ext-configure \
     gd --with-freetype --with-jpeg \
@@ -39,6 +43,7 @@ RUN apt-get update && apt-get install -y && docker-php-ext-configure \
 	    pgsql \
 	    soap \
         sockets \
+        memcached \
 	&& docker-php-source delete
 
 # Set working directory
