@@ -49,5 +49,19 @@ cd /home/admin/docker.collect.verything/memcached && sudo docker compose build &
 cd /home/admin/docker.collect.verything/rabbitmq && sudo docker compose build && sudo docker compose up -d
 cd /home/admin/docker.collect.verything/proxy-staging && sudo docker compose build && sudo docker compose up -d
 
+create database addresses;
+create database admins;
+create database api;
+create database carts;
+create database employees;
+create database images;
+create database mails;
+create database orders;
+create database products;
+create database stores;
+create database users;
+create database bills;
+create database payments;
+
 
 
