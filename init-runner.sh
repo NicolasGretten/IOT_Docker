@@ -63,5 +63,7 @@ create database users;
 create database bills;
 create database payments;
 
+php artisan migrate --force
+
 
 

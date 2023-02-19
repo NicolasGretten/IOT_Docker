@@ -12,9 +12,6 @@ services:
     tty: true
     networks:
       - collectandverything
-      - collectandverything-staging
 networks:
   collectandverything:
-    external: true
-  collectandverything-staging:
     external: true
