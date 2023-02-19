@@ -7,8 +7,8 @@ services:
       - "5672:5672"
       - "15672:15672"
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_DEFAULT_USER=collectandverything
+      - RABBITMQ_DEFAULT_PASS=Ym4DcUcTDc5jwB5P
     tty: true
     volumes:
       - '~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/data/'
