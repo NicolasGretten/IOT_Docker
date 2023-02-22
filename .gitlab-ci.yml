@@ -13,6 +13,7 @@ stages:
   - staging-product
   - staging-store
   - staging-user
+  - staging-payment
   - staging-vitrine
   - staging-rabbitmq
   - prod-pull
@@ -29,6 +30,7 @@ stages:
   - prod-product
   - prod-store
   - prod-user
+  - prod-payment
   - prod-vitrine
   - prod-rabbitmq
   - proxy
@@ -259,6 +261,24 @@ staging-user-job:
     - staging
   script:
     - cd /home/admin/docker.collect.verything/user && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+staging-payment-job:
+  stage: staging-payment
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "payment/*"
+        - "payment/*/*"
+        - "payment/*/*/*"
+  environment:
+    name: staging
+    url: https://staging.api.collectandverything.fr
+  tags:
+    - staging
+  script:
+    - cd /home/admin/docker.collect.verything/payment && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
 
 staging-vitrine-job:
   stage: staging-vitrine
@@ -514,6 +534,24 @@ prod-user-job:
     - production
   script:
     - cd /home/admin/docker.collect.verything/user && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+prod-payment-job:
+  stage: prod-payment
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "payment/*"
+        - "payment/*/*"
+        - "payment/*/*/*"
+  environment:
+    name: production
+    url: https://api.collectandverything.fr
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/payment && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
 
 prod-vitrine-job:
   stage: prod-vitrine
