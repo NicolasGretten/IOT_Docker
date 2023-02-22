@@ -1,0 +1,31 @@
+version: '3'
+services:
+  nginx:
+    container_name: payment-nginx
+    build:
+      context: .
+      dockerfile: nginx/dockerfile
+    image: 'nginx:alpine'
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - './conf/nginx/nginx.conf:/etc/nginx/nginx.conf'
+    networks:
+      - collectandverything
+  php-fpm:
+    container_name: payment-php
+    env_file: '.env'
+    build:
+      context: .
+      args:
+        - GITLAB_BRANCH=${APP_ENV}
+      dockerfile: php/dockerfile
+    image: 'collectandverything-payment:latest'
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www
+    networks:
+      - collectandverything
+networks:
+  collectandverything:
+    external: true

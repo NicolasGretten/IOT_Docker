@@ -62,7 +62,11 @@
 
     {"name":"create_order","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
 
-    {"name":"product_image","vhost":"/","durable":true,"auto_delete":false,"arguments":{}}
+    {"name":"product_image","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+
+    {"name":"confirm_cart","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"stripe_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"wallet_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}}
   ],
 
   "exchanges": [
