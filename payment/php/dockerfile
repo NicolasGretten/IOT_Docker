@@ -12,12 +12,10 @@ RUN rm -R /var/www
 # Clone project
 ARG GITLAB_BRANCH
 
-RUN git clone -b $GITLAB_BRANCH http://deployment:glpat-yjLtWVh6jyhByzHFyXz7@51.178.182.214/collect-verything/back/payment.api.collect.verything.git /var/www
+RUN git clone -b master http://deployment:glpat-yjLtWVh6jyhByzHFyXz7@51.178.182.214/collect-verything/back/payment.api.collect.verything.git /var/www
 
 # Setup dependencies
 RUN export COMPOSER_ALLOW_SUPERUSER=1
-
-RUN composer update --lock
 
 RUN composer install
 
