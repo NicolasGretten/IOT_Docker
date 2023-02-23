@@ -66,7 +66,7 @@
 
     {"name":"confirm_cart","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"stripe_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"wallet_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}}
+    {"name":"store_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}}
   ],
 
   "exchanges": [
