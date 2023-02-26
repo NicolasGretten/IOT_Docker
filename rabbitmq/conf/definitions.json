@@ -70,7 +70,8 @@
     {"name":"payment_intent_failed","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"payment_intent_success","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"order_create","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"bill_create","vhost":"/","durable":true,"auto_delete":false,"arguments":{}}
+    {"name":"bill_create","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"webhook","vhost":"/","durable":true,"auto_delete":false,"arguments":{}}
   ],
 
   "exchanges": [
