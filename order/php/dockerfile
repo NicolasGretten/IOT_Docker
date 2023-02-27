@@ -28,4 +28,4 @@ RUN chown -R www-data:www-data /var/www
 # Expose port 9000 for php-fpm
 EXPOSE 9000
 
-#CMD ["/usr/bin/supervisord"]
+CMD ["/usr/bin/supervisord"]
