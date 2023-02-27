@@ -9,3 +9,6 @@ ENV PATH /app/node_modules/.bin:$PATH
 COPY . .
 
 RUN npm cache clean --force
+
+# Clear /app
+RUN rm -R /app
