@@ -5,7 +5,7 @@ RUN rm -R /app
 
 # Clone project
 ARG GITLAB_BRANCH
-RUN git clone -b $GITLAB_BRANCH http://deployment:glpat-HnNo8WbXABMraco9z2zc@51.178.182.214/collect-verything/front/shop-collect-verything.git /app
+RUN git clone -b main http://deployment:glpat-HnNo8WbXABMraco9z2zc@51.178.182.214/collect-verything/front/shop-collect-verything.git /app
 RUN npm i -f
 
 RUN if [[ "$GITLAB_BRANCH" = "staging" ]] ; then npm run build ; else echo skipping staging ; fi
