@@ -34,6 +34,7 @@ stages:
   - prod-vitrine
   - prod-rabbitmq
   - proxy
+  - proxy-staging
 
 staging-pull-job:
   stage: staging-pull
@@ -598,6 +599,24 @@ proxy-job:
   script:
     - cd /home/admin/docker.collect.verything/proxy && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
   when: manual
+
+proxy-staging-job:
+  stage: proxy-staging
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "proxy-staging/*"
+        - "proxy-staging/*/*"
+        - "proxy-staging/*/*/*"
+  environment:
+    name: production
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/proxy && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+  when: manual
+
 
 after_script:
   - cd /home/admin/docker.collect.verything && sudo docker image prune --force
