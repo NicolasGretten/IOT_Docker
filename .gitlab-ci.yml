@@ -604,7 +604,7 @@ proxy-staging-job:
   stage: proxy-staging
   allow_failure: false
   rules:
-    - if: $CI_COMMIT_BRANCH == "production"
+    - if: $CI_COMMIT_BRANCH == "staging"
       changes:
         - "proxy-staging/*"
         - "proxy-staging/*/*"
