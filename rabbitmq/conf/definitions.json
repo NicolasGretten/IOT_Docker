@@ -70,6 +70,7 @@
     {"name":"payment_intent_failed","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"payment_intent_success","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"order_create","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"order_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"bill_create","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"enable_store","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"store_subscription_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
