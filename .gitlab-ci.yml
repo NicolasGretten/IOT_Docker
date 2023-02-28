@@ -614,7 +614,7 @@ proxy-staging-job:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/proxy && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/proxy-staging && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
   when: manual
 
 
