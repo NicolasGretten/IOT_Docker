@@ -4,6 +4,7 @@ stages:
   - staging-admin
   - staging-api
   - staging-boutique
+  - staging-bill
   - staging-cart
   - staging-dashboard
   - staging-employee
@@ -21,6 +22,7 @@ stages:
   - prod-admin
   - prod-api
   - prod-boutique
+  - prod-bill
   - prod-cart
   - prod-dashboard
   - prod-employee
@@ -112,6 +114,24 @@ staging-boutique-job:
     - staging
   script:
     - cd /home/admin/docker.collect.verything/boutique && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+staging-bill-job:
+  stage: staging-bill
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "bill/*"
+        - "bill/*/*"
+        - "bill/*/*/*"
+  environment:
+    name: staging
+    url: https://staging.api.collectandverything.fr
+  tags:
+    - staging
+  script:
+    - cd /home/admin/docker.collect.verything/bill && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
 
 staging-cart-job:
   stage: staging-cart
@@ -385,6 +405,24 @@ prod-boutique-job:
     - production
   script:
     - cd /home/admin/docker.collect.verything/boutique && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+prod-bill-job:
+  stage: prod-bill
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "bill/*"
+        - "bill/*/*"
+        - "bill/*/*/*"
+  environment:
+    name: production
+    url: https://api.collectandverything.fr
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/bill && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
 
 prod-cart-job:
   stage: prod-cart
