@@ -75,6 +75,7 @@
     {"name":"enable_store","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"store_subscription_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"capture","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"captured","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"webhook","vhost":"/","durable":true,"auto_delete":false,"arguments":{}}
   ],
 
