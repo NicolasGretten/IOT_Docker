@@ -61,7 +61,7 @@ staging_test_address:
   tags:
     - staging
   script:
-    - docker exec address-php phpcs --standard=PSR12 app/
+    - sudo docker exec address-php phpcs --standard=PSR12 app/
 
 staging_deploy_address:
   stage: staging-deploy
