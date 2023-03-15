@@ -61,10 +61,7 @@ staging_test_address:
   tags:
     - staging
   script:
-    - sudo docker exec address-php phpcs --standard=PSR12 app/
-  artifacts:
-    paths:
-      - report.xml
+    - sudo docker run --name address-test-php collectandverything-address:latest
 
 staging_deploy_address:
   stage: staging-deploy
