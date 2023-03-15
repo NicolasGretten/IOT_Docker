@@ -57,11 +57,13 @@ staging_build_address:
 staging_test_address:
   stage: staging-test
   allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
   needs: [staging_build_address]
   tags:
     - staging
   script:
-    - sudo docker run --rm -it --name address-test-php collectandverything-address:latest && phpcs --standard=PSR12 app/ > report.txt && exit
+    - sudo docker run --rm -it --name address-test-php collectandverything-address:latest && phpcs --standard=PSR12 app/ && exit
   artifacts:
     paths:
       - report.txt
@@ -69,6 +71,8 @@ staging_test_address:
 staging_deploy_address:
   stage: staging-deploy
   allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
   needs: [staging_deploy_address]
   tags:
     - staging
