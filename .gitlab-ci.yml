@@ -1,6 +1,7 @@
 stages:
   - staging-pull
   - build
+  - staging-rabbitmq
   - prod-pull
   - prod-address
   - prod-admin
@@ -34,8 +35,8 @@ staging-pull-job:
   after_script:
     - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/staging && sudo git pull origin staging
 
-build_a:
-  stage: build
+staging-build_address:
+  stage: staging-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -51,8 +52,8 @@ build_a:
   script:
     - cd /home/admin/docker.collect.verything/address && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-build_b:
-  stage: build
+staging-build_admin:
+  stage: staging-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -69,7 +70,7 @@ build_b:
     - cd /home/admin/docker.collect.verything/admin && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 staging-build_api:
-  stage: staging-api
+  stage: staging-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -86,7 +87,7 @@ staging-build_api:
     - cd /home/admin/docker.collect.verything/api && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 staging-build_boutique:
-  stage: staging-boutique
+  stage: staging-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -100,7 +101,7 @@ staging-build_boutique:
     - cd /home/admin/docker.collect.verything/boutique && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 staging-build_bill:
-  stage: staging-bill
+  stage: staging-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -118,7 +119,7 @@ staging-build_bill:
 
 
 staging-build_cart:
-  stage: staging-cart
+  stage: staging-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -135,7 +136,7 @@ staging-build_cart:
     - cd /home/admin/docker.collect.verything/cart && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 staging-build_dashboard:
-  stage: staging-dashboard
+  stage: staging-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -149,7 +150,7 @@ staging-build_dashboard:
     - cd /home/admin/docker.collect.verything/dashboard && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 staging-build_employee:
-  stage: staging-employee
+  stage: staging-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -166,7 +167,7 @@ staging-build_employee:
     - cd /home/admin/docker.collect.verything/employee && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 staging-build_image:
-  stage: staging-image
+  stage: staging-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -183,7 +184,7 @@ staging-build_image:
     - cd /home/admin/docker.collect.verything/image && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 staging-build_mail:
-  stage: staging-mail
+  stage: staging-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -200,7 +201,7 @@ staging-build_mail:
     - cd /home/admin/docker.collect.verything/mail && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 staging-build_order:
-  stage: staging-order
+  stage: staging-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -217,7 +218,7 @@ staging-build_order:
     - cd /home/admin/docker.collect.verything/order && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 staging-build_product:
-  stage: staging-product
+  stage: staging-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -234,7 +235,7 @@ staging-build_product:
     - cd /home/admin/docker.collect.verything/product && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 staging-build_store:
-  stage: staging-store
+  stage: staging-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -251,7 +252,7 @@ staging-build_store:
     - cd /home/admin/docker.collect.verything/store && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 staging-build_user:
-  stage: staging-user
+  stage: staging-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -268,7 +269,7 @@ staging-build_user:
     - cd /home/admin/docker.collect.verything/user && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 staging-build_payment:
-  stage: staging-payment
+  stage: staging-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -286,7 +287,7 @@ staging-build_payment:
 
 
 staging-build_vitrine:
-  stage: staging-vitrine
+  stage: staging-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
