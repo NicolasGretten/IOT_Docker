@@ -1,6 +1,8 @@
 stages:
   - staging-pull
   - staging-build
+  - staging-test
+  - staging-deploy
   - staging-rabbitmq
   - prod-pull
   - prod-address
@@ -50,7 +52,25 @@ staging_build_address:
   tags:
     - staging
   script:
-    - cd /home/admin/docker.collect.verything/address && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/address && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache
+
+staging_test_address:
+  stage: staging-test
+  allow_failure: false
+  needs: [staging_build_address]
+  tags:
+    - staging
+  script:
+    - docker exec address-php phpcs --standard=PSR12 app/
+
+staging_deploy_address:
+  stage: staging-deploy
+  allow_failure: false
+  needs: [staging_test_address]
+  tags:
+    - staging
+  script:
+    - cd /home/admin/docker.collect.verything/address && sudo -E docker compose up -d
 
 staging_build_admin:
   stage: staging-build
