@@ -35,7 +35,7 @@ staging-pull-job:
     - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/staging && sudo git pull origin staging
 
 build_a:
-  stage: staging-build
+  stage: build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -52,7 +52,7 @@ build_a:
     - cd /home/admin/docker.collect.verything/address && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 build_b:
-  stage: staging-build
+  stage: build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
