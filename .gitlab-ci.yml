@@ -35,7 +35,7 @@ staging-pull-job:
   after_script:
     - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/staging && sudo git pull origin staging
 
-staging-build-address:
+staging_build_address:
   stage: staging-build
   allow_failure: false
   rules:
