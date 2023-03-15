@@ -1,6 +1,6 @@
 stages:
   - staging-pull
-  - build
+  - staging-build
   - staging-rabbitmq
   - prod-pull
   - prod-address
