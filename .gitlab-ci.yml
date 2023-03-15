@@ -61,7 +61,7 @@ staging_test_address:
   tags:
     - staging
   script:
-    - sudo docker run --rm -it--name address-test-php collectandverything-address:latest && phpcs --standard=PSR12 app/ > report.txt && exit
+    - sudo docker run --rm -it --name address-test-php collectandverything-address:latest && phpcs --standard=PSR12 app/ > report.txt && exit
   artifacts:
     paths:
       - report.txt
