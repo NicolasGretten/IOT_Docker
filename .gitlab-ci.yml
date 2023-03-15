@@ -52,7 +52,7 @@ staging_build_address:
   script:
     - cd /home/admin/docker.collect.verything/address && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-build_admin:
+staging_build_admin:
   stage: staging-build
   allow_failure: false
   rules:
@@ -69,7 +69,7 @@ staging-build_admin:
   script:
     - cd /home/admin/docker.collect.verything/admin && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-build_api:
+staging_build_api:
   stage: staging-build
   allow_failure: false
   rules:
@@ -86,7 +86,7 @@ staging-build_api:
   script:
     - cd /home/admin/docker.collect.verything/api && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-build_boutique:
+staging_build_boutique:
   stage: staging-build
   allow_failure: false
   rules:
@@ -100,7 +100,7 @@ staging-build_boutique:
   script:
     - cd /home/admin/docker.collect.verything/boutique && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-build_bill:
+staging_build_bill:
   stage: staging-build
   allow_failure: false
   rules:
@@ -118,7 +118,7 @@ staging-build_bill:
     - cd /home/admin/docker.collect.verything/bill && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 
-staging-build_cart:
+staging_build_cart:
   stage: staging-build
   allow_failure: false
   rules:
@@ -135,7 +135,7 @@ staging-build_cart:
   script:
     - cd /home/admin/docker.collect.verything/cart && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-build_dashboard:
+staging_build_dashboard:
   stage: staging-build
   allow_failure: false
   rules:
@@ -149,7 +149,7 @@ staging-build_dashboard:
   script:
     - cd /home/admin/docker.collect.verything/dashboard && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-build_employee:
+staging_build_employee:
   stage: staging-build
   allow_failure: false
   rules:
@@ -166,7 +166,7 @@ staging-build_employee:
   script:
     - cd /home/admin/docker.collect.verything/employee && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-build_image:
+staging_build_image:
   stage: staging-build
   allow_failure: false
   rules:
@@ -183,7 +183,7 @@ staging-build_image:
   script:
     - cd /home/admin/docker.collect.verything/image && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-build_mail:
+staging_build_mail:
   stage: staging-build
   allow_failure: false
   rules:
@@ -200,7 +200,7 @@ staging-build_mail:
   script:
     - cd /home/admin/docker.collect.verything/mail && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-build_order:
+staging_build_order:
   stage: staging-build
   allow_failure: false
   rules:
@@ -217,7 +217,7 @@ staging-build_order:
   script:
     - cd /home/admin/docker.collect.verything/order && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-build_product:
+staging_build_product:
   stage: staging-build
   allow_failure: false
   rules:
@@ -234,7 +234,7 @@ staging-build_product:
   script:
     - cd /home/admin/docker.collect.verything/product && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-build_store:
+staging_build_store:
   stage: staging-build
   allow_failure: false
   rules:
@@ -251,7 +251,7 @@ staging-build_store:
   script:
     - cd /home/admin/docker.collect.verything/store && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-build_user:
+staging_build_user:
   stage: staging-build
   allow_failure: false
   rules:
@@ -268,7 +268,7 @@ staging-build_user:
   script:
     - cd /home/admin/docker.collect.verything/user && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-build_payment:
+staging_build_payment:
   stage: staging-build
   allow_failure: false
   rules:
@@ -286,7 +286,7 @@ staging-build_payment:
     - cd /home/admin/docker.collect.verything/payment && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 
-staging-build_vitrine:
+staging_build_vitrine:
   stage: staging-build
   allow_failure: false
   rules:
