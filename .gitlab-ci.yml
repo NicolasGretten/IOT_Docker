@@ -57,7 +57,7 @@ staging_build_address:
 staging_test_address:
   stage: staging-test
   allow_failure: false
-  needs: [staging_build_address]
+  needs: [staging-build]
   tags:
     - staging
   script:
@@ -66,7 +66,7 @@ staging_test_address:
 staging_deploy_address:
   stage: staging-deploy
   allow_failure: false
-  needs: [staging_test_address]
+  needs: [staging-test]
   tags:
     - staging
   script:
