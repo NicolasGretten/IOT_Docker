@@ -64,7 +64,7 @@ staging_test_address:
     - staging
   script:
     - sudo docker run -d --name address-test-php collectandverything-address:latest
-    - sudo docker exec address-test-php /bin/bash -c phpcs --standard=PSR12 app/ &&
+    - sudo docker exec address-test-php /bin/bash -c phpcs --standard=PSR12 app/ > report.txt
     - sudo rm -f address-test-php
   artifacts:
     paths:
@@ -75,7 +75,7 @@ staging_deploy_address:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
-  needs: [staging_deploy_address]
+  needs: [staging_test_address]
   tags:
     - staging
   script:
