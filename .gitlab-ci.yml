@@ -1,22 +1,6 @@
 stages:
   - staging-pull
-  - staging-address
-  - staging-admin
-  - staging-api
-  - staging-boutique
-  - staging-bill
-  - staging-cart
-  - staging-dashboard
-  - staging-employee
-  - staging-image
-  - staging-mail
-  - staging-order
-  - staging-product
-  - staging-store
-  - staging-user
-  - staging-payment
-  - staging-vitrine
-  - staging-rabbitmq
+  - staging-build
   - prod-pull
   - prod-address
   - prod-admin
@@ -50,7 +34,7 @@ staging-pull-job:
   after_script:
     - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/staging && sudo git pull origin staging
 
-staging-address-job:
+staging-build_address:
   stage: staging-address
   allow_failure: false
   rules:
@@ -67,7 +51,7 @@ staging-address-job:
   script:
     - cd /home/admin/docker.collect.verything/address && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-admin-job:
+staging-build_admin:
   stage: staging-admin
   allow_failure: false
   rules:
@@ -84,7 +68,7 @@ staging-admin-job:
   script:
     - cd /home/admin/docker.collect.verything/admin && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-api-job:
+staging-build_api:
   stage: staging-api
   allow_failure: false
   rules:
@@ -101,7 +85,7 @@ staging-api-job:
   script:
     - cd /home/admin/docker.collect.verything/api && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-boutique-job:
+staging-build_boutique:
   stage: staging-boutique
   allow_failure: false
   rules:
@@ -115,7 +99,7 @@ staging-boutique-job:
   script:
     - cd /home/admin/docker.collect.verything/boutique && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-bill-job:
+staging-build_bill:
   stage: staging-bill
   allow_failure: false
   rules:
@@ -133,7 +117,7 @@ staging-bill-job:
     - cd /home/admin/docker.collect.verything/bill && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 
-staging-cart-job:
+staging-build_cart:
   stage: staging-cart
   allow_failure: false
   rules:
@@ -150,7 +134,7 @@ staging-cart-job:
   script:
     - cd /home/admin/docker.collect.verything/cart && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-dashboard-job:
+staging-build_dashboard:
   stage: staging-dashboard
   allow_failure: false
   rules:
@@ -164,7 +148,7 @@ staging-dashboard-job:
   script:
     - cd /home/admin/docker.collect.verything/dashboard && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-employee-job:
+staging-build_employee:
   stage: staging-employee
   allow_failure: false
   rules:
@@ -181,7 +165,7 @@ staging-employee-job:
   script:
     - cd /home/admin/docker.collect.verything/employee && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-image-job:
+staging-build_image:
   stage: staging-image
   allow_failure: false
   rules:
@@ -198,7 +182,7 @@ staging-image-job:
   script:
     - cd /home/admin/docker.collect.verything/image && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-mail-job:
+staging-build_mail:
   stage: staging-mail
   allow_failure: false
   rules:
@@ -215,7 +199,7 @@ staging-mail-job:
   script:
     - cd /home/admin/docker.collect.verything/mail && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-order-job:
+staging-build_order:
   stage: staging-order
   allow_failure: false
   rules:
@@ -232,7 +216,7 @@ staging-order-job:
   script:
     - cd /home/admin/docker.collect.verything/order && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-product-job:
+staging-build_product:
   stage: staging-product
   allow_failure: false
   rules:
@@ -249,7 +233,7 @@ staging-product-job:
   script:
     - cd /home/admin/docker.collect.verything/product && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-store-job:
+staging-build_store:
   stage: staging-store
   allow_failure: false
   rules:
@@ -266,7 +250,7 @@ staging-store-job:
   script:
     - cd /home/admin/docker.collect.verything/store && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-user-job:
+staging-build_user:
   stage: staging-user
   allow_failure: false
   rules:
@@ -283,7 +267,7 @@ staging-user-job:
   script:
     - cd /home/admin/docker.collect.verything/user && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-payment-job:
+staging-build_payment:
   stage: staging-payment
   allow_failure: false
   rules:
@@ -301,7 +285,7 @@ staging-payment-job:
     - cd /home/admin/docker.collect.verything/payment && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 
-staging-vitrine-job:
+staging-build_vitrine:
   stage: staging-vitrine
   allow_failure: false
   rules:
