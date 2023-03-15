@@ -34,7 +34,7 @@ staging-pull-job:
   after_script:
     - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/staging && sudo git pull origin staging
 
-build_a:
+build_a-job:
   stage: staging-address
   allow_failure: false
   rules:
@@ -51,7 +51,7 @@ build_a:
   script:
     - cd /home/admin/docker.collect.verything/address && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-build_b:
+build_b-job:
   stage: staging-admin
   allow_failure: false
   rules:
