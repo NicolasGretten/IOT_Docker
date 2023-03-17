@@ -24,10 +24,14 @@ RUN apt-get update && apt-get install -y \
         nano \
         libmemcached-dev \
         zlib1g-dev \
-        memcached \
+        memcached &&\
+        apt-get install -y wget apt-transport-https gnupg lsb-release && \
+            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | apt-key add - && \
+            echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | tee -a /etc/apt/sources.list.d/trivy.list && \
+            apt-get update \
     && pecl install memcached
 
-RUN apt-get update && apt-get install -y && docker-php-ext-configure \
+RUN apt-get update && apt-get install -y && apt-get install -y trivy && docker-php-ext-configure \
     gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
 	    -j$(nproc) gd \
