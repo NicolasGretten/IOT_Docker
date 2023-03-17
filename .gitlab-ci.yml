@@ -64,16 +64,16 @@ staging_test_address:
     - staging
   script:
     - sudo docker run -d --name address-test-php collectandverything-address:latest
-    - sudo docker exec address-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.txt || true'
-    - sudo docker exec address-test-php /bin/bash -c 'php artisan test > test.txt || true'
-    - sudo docker cp address-test-php:/var/www/output.txt phpcs-address.txt
-    - sudo docker cp address-test-php:/var/www/test.txt phpunit-address.txt
+    - sudo docker exec address-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
+    - sudo docker exec address-test-php /bin/bash -c 'php artisan test > test.xml || true'
+    - sudo docker cp address-test-php:/var/www/output.xml phpcs-address.xml
+    - sudo docker cp address-test-php:/var/www/test.xml phpunit-address.xml
     - ls -a
   after_script:
     - sudo docker rm -f address-test-php
   artifacts:
     paths:
-      - "*.txt"
+      - "*.xml"
 
 staging_deploy_address:
   stage: staging-deploy
