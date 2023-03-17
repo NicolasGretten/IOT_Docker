@@ -59,7 +59,7 @@ staging_test_address:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
-  needs: [staging_build_address]
+  needs: [staging_build]
   tags:
     - staging
   script:
@@ -68,7 +68,6 @@ staging_test_address:
     - sudo docker exec address-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp address-test-php:/var/www/output.xml phpcs-address.xml
     - sudo docker cp address-test-php:/var/www/test.xml phpunit-address.xml
-    - ls -a
   after_script:
     - sudo docker rm -f address-test-php
   artifacts:
@@ -80,7 +79,7 @@ staging_deploy_address:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
-  needs: [staging_test_address]
+  needs: [staging_test]
   tags:
     - staging
   script:
