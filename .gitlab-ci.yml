@@ -66,6 +66,7 @@ staging_test_address:
     - sudo docker run -d --name address-test-php collectandverything-address:latest
     - sudo docker exec address-test-php /bin/bash -c 'echo "hello world" > output.txt'
     - sudo docker cp address-test-php:/var/www/output.txt /output.txt
+    - ls -a
   after_script:
     - sudo docker rm -f address-test-php
   artifacts:
