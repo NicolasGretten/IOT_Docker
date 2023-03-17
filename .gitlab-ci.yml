@@ -71,7 +71,7 @@ staging_test_address:
     - sudo docker rm -f address-test-php
   artifacts:
     paths:
-      - /home/admin/docker.collect.verything/output.txt
+      - output.txt
 
 staging_deploy_address:
   stage: staging-deploy
