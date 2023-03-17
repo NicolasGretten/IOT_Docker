@@ -64,7 +64,7 @@ staging_test_address:
     - staging
   script:
     - sudo docker run -d --name address-test-php collectandverything-address:latest
-    - sudo docker exec address-test-php /bin/bash -c phpcs app/
+    - sudo docker exec address-test-php phpcs app/
     - sudo docker rm -f address-test-php
 
 staging_deploy_address:
