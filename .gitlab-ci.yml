@@ -64,8 +64,12 @@ staging_test_address:
     - staging
   script:
     - sudo docker run -d --name address-test-php collectandverything-address:latest
-    - sudo docker exec address-test-php /bin/bash -c "phpcs --standard=PSR12 app/"
+    - sudo docker exec address-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.txt'
+    - sudo docker cp address-test-php:/output.txt /artifact/output.txt
     - sudo docker rm -f address-test-php
+  artifacts:
+    paths:
+      - /artifact/output.txt
 
 staging_deploy_address:
   stage: staging-deploy
