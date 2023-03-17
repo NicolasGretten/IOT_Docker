@@ -65,13 +65,13 @@ staging_test_address:
   script:
     - sudo docker run -d --name address-test-php collectandverything-address:latest
     - sudo docker exec address-test-php /bin/bash -c 'echo "hello world" > output.txt'
-    - sudo docker cp address-test-php:/var/www/output.txt /output.txt
+    - sudo docker cp address-test-php:/var/www/output.txt /home/admin/docker.collect.verything/output.txt
     - ls -a
   after_script:
     - sudo docker rm -f address-test-php
   artifacts:
     paths:
-      - /output.txt
+      - /home/admin/docker.collect.verything/output.txt
 
 staging_deploy_address:
   stage: staging-deploy
