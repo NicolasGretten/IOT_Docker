@@ -59,7 +59,6 @@ staging_test_address:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
-  needs: [staging_build_address]
   tags:
     - staging
   script:
@@ -79,7 +78,6 @@ staging_deploy_address:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
-  needs: [staging_test_address]
   tags:
     - staging
   script:
