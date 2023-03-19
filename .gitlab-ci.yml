@@ -116,6 +116,7 @@ staging_build_address:
 
 staging_test_address:
   stage: staging-test
+  needs: [staging_build_address]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -135,6 +136,7 @@ staging_test_address:
 
 staging_deploy_address:
   stage: staging-deploy
+  needs: [staging_test_address]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -145,6 +147,7 @@ staging_deploy_address:
 
 staging_scan_address:
   stage: staging-scan
+  needs: [staging_build_address]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -172,6 +175,7 @@ staging_build_admin:
 
 staging_test_admin:
   stage: staging-test
+  needs: [staging_build_admin]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -191,6 +195,7 @@ staging_test_admin:
 
 staging_deploy_admin:
   stage: staging-deploy
+  needs: [staging_test_admin]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -201,6 +206,7 @@ staging_deploy_admin:
 
 staging_scan_admin:
   stage: staging-scan
+  needs: [staging_build_admin]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -228,6 +234,7 @@ staging_build_api:
 
 staging_test_api:
   stage: staging-test
+  needs: [staging_build_api]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -247,6 +254,7 @@ staging_test_api:
 
 staging_deploy_api:
   stage: staging-deploy
+  needs: [staging_test_api]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -257,6 +265,7 @@ staging_deploy_api:
 
 staging_scan_api:
   stage: staging-scan
+  needs: [staging_build_api]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -298,6 +307,7 @@ staging_build_bill:
 
 staging_test_bill:
   stage: staging-test
+  needs: [staging_build_bill]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -317,6 +327,7 @@ staging_test_bill:
 
 staging_deploy_bill:
   stage: staging-deploy
+  needs: [staging_test_bill]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -327,6 +338,7 @@ staging_deploy_bill:
 
 staging_scan_bill:
   stage: staging-scan
+  needs: [staging_build_bill]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -354,6 +366,7 @@ staging_build_cart:
 
 staging_test_cart:
   stage: staging-test
+  needs: [staging_build_cart]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -373,6 +386,7 @@ staging_test_cart:
 
 staging_deploy_cart:
   stage: staging-deploy
+  needs: [staging_test_cart]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -383,6 +397,7 @@ staging_deploy_cart:
 
 staging_scan_cart:
   stage: staging-scan
+  needs: [staging_build_cart]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -424,6 +439,7 @@ staging_build_employee:
 
 staging_test_employee:
   stage: staging-test
+  needs: [staging_build_employee]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -443,6 +459,7 @@ staging_test_employee:
 
 staging_deploy_employee:
   stage: staging-deploy
+  needs: [staging_test_employee]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -453,6 +470,7 @@ staging_deploy_employee:
 
 staging_scan_employee:
   stage: staging-scan
+  needs: [staging_build_employee]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -480,6 +498,7 @@ staging_build_image:
 
 staging_test_image:
   stage: staging-test
+  needs: [staging_build_image]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -499,6 +518,7 @@ staging_test_image:
 
 staging_deploy_image:
   stage: staging-deploy
+  needs: [staging_test_image]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -509,6 +529,7 @@ staging_deploy_image:
 
 staging_scan_image:
   stage: staging-scan
+  needs: [staging_build_image]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -536,6 +557,7 @@ staging_build_mail:
 
 staging_test_mail:
   stage: staging-test
+  needs: [staging_build_mail]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -555,6 +577,7 @@ staging_test_mail:
 
 staging_deploy_mail:
   stage: staging-deploy
+  needs: [staging_test_mail]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -565,6 +588,7 @@ staging_deploy_mail:
 
 staging_scan_mail:
   stage: staging-scan
+  needs: [staging_build_mail]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -592,6 +616,7 @@ staging_build_order:
 
 staging_test_order:
   stage: staging-test
+  needs: [staging_build_order]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -611,6 +636,7 @@ staging_test_order:
 
 staging_deploy_order:
   stage: staging-deploy
+  needs: [staging_test_order]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -621,6 +647,7 @@ staging_deploy_order:
 
 staging_scan_order:
   stage: staging-scan
+  needs: [staging_build_order]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -648,6 +675,7 @@ staging_build_product:
 
 staging_test_product:
   stage: staging-test
+  needs: [staging_build_product]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -667,6 +695,7 @@ staging_test_product:
 
 staging_deploy_product:
   stage: staging-deploy
+  needs: [staging_test_product]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -677,6 +706,7 @@ staging_deploy_product:
 
 staging_scan_product:
   stage: staging-scan
+  needs: [staging_build_product]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -704,6 +734,7 @@ staging_build_store:
 
 staging_test_store:
   stage: staging-test
+  needs: [staging_build_store]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -723,6 +754,7 @@ staging_test_store:
 
 staging_deploy_store:
   stage: staging-deploy
+  needs: [staging_test_store]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -733,6 +765,7 @@ staging_deploy_store:
 
 staging_scan_store:
   stage: staging-scan
+  needs: [staging_build_store]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -760,6 +793,7 @@ staging_build_user:
 
 staging_test_user:
   stage: staging-test
+  needs: [staging_build_user]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -779,6 +813,7 @@ staging_test_user:
 
 staging_deploy_user:
   stage: staging-deploy
+  needs: [staging_test_user]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -789,6 +824,7 @@ staging_deploy_user:
 
 staging_scan_user:
   stage: staging-scan
+  needs: [staging_build_user]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -816,6 +852,7 @@ staging_build_payment:
 
 staging_test_payment:
   stage: staging-test
+  needs: [staging_build_payment]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -835,6 +872,7 @@ staging_test_payment:
 
 staging_deploy_payment:
   stage: staging-deploy
+  needs: [staging_test_payment]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -845,6 +883,7 @@ staging_deploy_payment:
 
 staging_scan_payment:
   stage: staging-scan
+  needs: [staging_build_payment]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
