@@ -1,14 +1,15 @@
 stages:
   - staging-pull
-  - production-build
+  - production-pull
   - images
   - staging-build
+  - staging-scan
   - staging-test
   - staging-deploy
-  - staging-scan
+  - production-build
+  - production-scan
   - production-test
   - production-deploy
-  - production-scan
   - rabbitmq
   - proxy
 
@@ -879,6 +880,19 @@ staging_rabbitmq:
     - staging
   script:
     - cd /home/admin/docker.collect.verything/rabbitmq && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+
+production-pull-job:
+  stage: production-pull
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - echo "HELLO"
+  after_script:
+    - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/staging && sudo git pull origin staging
 
 production_build_address:
   stage: production-build
