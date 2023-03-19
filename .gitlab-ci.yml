@@ -120,6 +120,10 @@ staging_test_address:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "address/*"
+        - "address/*/*"
+        - "address/*/*/*"
   tags:
     - staging
   script:
@@ -140,6 +144,10 @@ staging_deploy_address:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "address/*"
+        - "address/*/*"
+        - "address/*/*/*"
   tags:
     - staging
   script:
@@ -151,6 +159,10 @@ staging_scan_address:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "address/*"
+        - "address/*/*"
+        - "address/*/*/*"
   tags:
     - staging
   script:
@@ -179,6 +191,10 @@ staging_test_admin:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "admin/*"
+        - "admin/*/*"
+        - "admin/*/*/*"
   tags:
     - staging
   script:
@@ -199,6 +215,10 @@ staging_deploy_admin:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "admin/*"
+        - "admin/*/*"
+        - "admin/*/*/*"
   tags:
     - staging
   script:
@@ -210,6 +230,10 @@ staging_scan_admin:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "admin/*"
+        - "admin/*/*"
+        - "admin/*/*/*"
   tags:
     - staging
   script:
@@ -238,6 +262,10 @@ staging_test_api:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "api/*"
+        - "api/*/*"
+        - "api/*/*/*"
   tags:
     - staging
   script:
@@ -258,6 +286,10 @@ staging_deploy_api:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "api/*"
+        - "api/*/*"
+        - "api/*/*/*"
   tags:
     - staging
   script:
@@ -269,6 +301,10 @@ staging_scan_api:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "api/*"
+        - "api/*/*"
+        - "api/*/*/*"
   tags:
     - staging
   script:
@@ -311,6 +347,10 @@ staging_test_bill:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "bill/*"
+        - "bill/*/*"
+        - "bill/*/*/*"
   tags:
     - staging
   script:
@@ -331,6 +371,10 @@ staging_deploy_bill:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "bill/*"
+        - "bill/*/*"
+        - "bill/*/*/*"
   tags:
     - staging
   script:
@@ -342,6 +386,10 @@ staging_scan_bill:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "bill/*"
+        - "bill/*/*"
+        - "bill/*/*/*"
   tags:
     - staging
   script:
@@ -370,6 +418,10 @@ staging_test_cart:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "cart/*"
+        - "cart/*/*"
+        - "cart/*/*/*"
   tags:
     - staging
   script:
@@ -390,6 +442,10 @@ staging_deploy_cart:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "cart/*"
+        - "cart/*/*"
+        - "cart/*/*/*"
   tags:
     - staging
   script:
@@ -401,6 +457,10 @@ staging_scan_cart:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "cart/*"
+        - "cart/*/*"
+        - "cart/*/*/*"
   tags:
     - staging
   script:
@@ -443,6 +503,10 @@ staging_test_employee:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "employee/*"
+        - "employee/*/*"
+        - "employee/*/*/*"
   tags:
     - staging
   script:
@@ -463,6 +527,10 @@ staging_deploy_employee:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "employee/*"
+        - "employee/*/*"
+        - "employee/*/*/*"
   tags:
     - staging
   script:
@@ -474,6 +542,10 @@ staging_scan_employee:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "employee/*"
+        - "employee/*/*"
+        - "employee/*/*/*"
   tags:
     - staging
   script:
@@ -502,6 +574,10 @@ staging_test_image:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "image/*"
+        - "image/*/*"
+        - "image/*/*/*"
   tags:
     - staging
   script:
@@ -522,6 +598,10 @@ staging_deploy_image:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "image/*"
+        - "image/*/*"
+        - "image/*/*/*"
   tags:
     - staging
   script:
@@ -533,6 +613,10 @@ staging_scan_image:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "image/*"
+        - "image/*/*"
+        - "image/*/*/*"
   tags:
     - staging
   script:
@@ -561,6 +645,10 @@ staging_test_mail:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "mail/*"
+        - "mail/*/*"
+        - "mail/*/*/*"
   tags:
     - staging
   script:
@@ -581,6 +669,10 @@ staging_deploy_mail:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "mail/*"
+        - "mail/*/*"
+        - "mail/*/*/*"
   tags:
     - staging
   script:
@@ -592,6 +684,10 @@ staging_scan_mail:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "mail/*"
+        - "mail/*/*"
+        - "mail/*/*/*"
   tags:
     - staging
   script:
@@ -620,6 +716,10 @@ staging_test_order:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "order/*"
+        - "order/*/*"
+        - "order/*/*/*"
   tags:
     - staging
   script:
@@ -640,6 +740,10 @@ staging_deploy_order:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "order/*"
+        - "order/*/*"
+        - "order/*/*/*"
   tags:
     - staging
   script:
@@ -651,6 +755,10 @@ staging_scan_order:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "order/*"
+        - "order/*/*"
+        - "order/*/*/*"
   tags:
     - staging
   script:
@@ -679,6 +787,10 @@ staging_test_product:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "product/*"
+        - "product/*/*"
+        - "product/*/*/*"
   tags:
     - staging
   script:
@@ -699,6 +811,10 @@ staging_deploy_product:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "product/*"
+        - "product/*/*"
+        - "product/*/*/*"
   tags:
     - staging
   script:
@@ -710,6 +826,10 @@ staging_scan_product:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "product/*"
+        - "product/*/*"
+        - "product/*/*/*"
   tags:
     - staging
   script:
@@ -738,6 +858,10 @@ staging_test_store:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "store/*"
+        - "store/*/*"
+        - "store/*/*/*"
   tags:
     - staging
   script:
@@ -758,6 +882,10 @@ staging_deploy_store:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "store/*"
+        - "store/*/*"
+        - "store/*/*/*"
   tags:
     - staging
   script:
@@ -769,6 +897,10 @@ staging_scan_store:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "store/*"
+        - "store/*/*"
+        - "store/*/*/*"
   tags:
     - staging
   script:
@@ -797,6 +929,10 @@ staging_test_user:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "user/*"
+        - "user/*/*"
+        - "user/*/*/*"
   tags:
     - staging
   script:
@@ -817,6 +953,10 @@ staging_deploy_user:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "user/*"
+        - "user/*/*"
+        - "user/*/*/*"
   tags:
     - staging
   script:
@@ -828,6 +968,10 @@ staging_scan_user:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "user/*"
+        - "user/*/*"
+        - "user/*/*/*"
   tags:
     - staging
   script:
@@ -856,6 +1000,10 @@ staging_test_payment:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "payment/*"
+        - "payment/*/*"
+        - "payment/*/*/*"
   tags:
     - staging
   script:
@@ -876,6 +1024,10 @@ staging_deploy_payment:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "payment/*"
+        - "payment/*/*"
+        - "payment/*/*/*"
   tags:
     - staging
   script:
@@ -887,6 +1039,10 @@ staging_scan_payment:
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "payment/*"
+        - "payment/*/*"
+        - "payment/*/*/*"
   tags:
     - staging
   script:
