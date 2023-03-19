@@ -1,18 +1,16 @@
 stages:
   - staging-pull
   - production-build
-  - image-build
+  - images
   - staging-build
   - staging-test
   - staging-deploy
   - staging-scan
-  - staging-rabbitmq
   - production-test
   - production-deploy
   - production-scan
-  - production-rabbitmq
+  - rabbitmq
   - proxy
-  - proxy-staging
 
 staging-pull-job:
   stage: staging-pull
@@ -26,41 +24,74 @@ staging-pull-job:
   after_script:
     - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/staging && sudo git pull origin staging
 
-image_php:
-  stage: image-build
+staging_image_php:
+  stage: images
   allow_failure: false
   rules:
-    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_BRANCH == "staging"
       changes:
         - "images/php8.1-fpm/*"
   tags:
     - staging
-    - production
   script:
     - cd /home/admin/docker.collect.verything/images/php8.1-fpm && sudo docker build -t collectandverything-php .
 
-image_nginx:
-  stage: image-build
+staging_image_nginx:
+  stage: images
   allow_failure: false
   rules:
-    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_BRANCH == "staging"
       changes:
         - "images/nginx-alpine/*"
   tags:
     - staging
-    - production
   script:
     - cd /home/admin/docker.collect.verything/images/nginx-alpine && sudo docker build -t collectandverything-nginx .
 
-image_react:
-  stage: image-build
+staging_image_react:
+  stage: images
   allow_failure: false
   rules:
-    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_BRANCH == "staging"
       changes:
         - "images/react/*"
   tags:
     - staging
+  script:
+    - cd /home/admin/docker.collect.verything/images/react && sudo docker build -t collectandverything-react .
+
+production_image_php:
+  stage: images
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "images/php8.1-fpm/*"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/images/php8.1-fpm && sudo docker build -t collectandverything-php .
+
+production_image_nginx:
+  stage: images
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "images/nginx-alpine/*"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/images/nginx-alpine && sudo docker build -t collectandverything-nginx .
+
+production_image_react:
+  stage: images
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "images/react/*"
+  tags:
     - production
   script:
     - cd /home/admin/docker.collect.verything/images/react && sudo docker build -t collectandverything-react .
@@ -835,8 +866,8 @@ staging_build_vitrine:
   script:
     - cd /home/admin/docker.collect.verything/vitrine && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-staging-rabbitmq-job:
-  stage: staging-rabbitmq
+staging_rabbitmq:
+  stage: rabbitmq
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -1619,23 +1650,8 @@ production_build_vitrine:
   script:
     - cd /home/admin/docker.collect.verything/vitrine && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-production-rabbitmq-job:
-  stage: production-rabbitmq
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "rabbitmq/*"
-        - "rabbitmq/*/*"
-        - "rabbitmq/*/*/*"
-  tags:
-    - production
-  script:
-    - cd /home/admin/docker.collect.verything/rabbitmq && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
-
-
-prod-rabbitmq-job:
-  stage: prod-rabbitmq
+production_rabbitmq:
+  stage: rabbitmq
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -1648,7 +1664,7 @@ prod-rabbitmq-job:
   script:
     - cd /home/admin/docker.collect.verything/rabbitmq && sudo -E docker compose down && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-proxy-job:
+production_proxy:
   stage: proxy
   allow_failure: false
   rules:
@@ -1665,8 +1681,8 @@ proxy-job:
     - cd /home/admin/docker.collect.verything/proxy && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
   when: manual
 
-proxy-staging-job:
-  stage: proxy-staging
+staging_proxy:
+  stage: proxy
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
