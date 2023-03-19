@@ -1,28 +1,16 @@
 stages:
   - staging-pull
+  - production-build
+  - image-build
   - staging-build
   - staging-test
   - staging-deploy
   - staging-scan
   - staging-rabbitmq
-  - prod-pull
-  - prod-address
-  - prod-admin
-  - prod-api
-  - prod-boutique
-  - prod-bill
-  - prod-cart
-  - prod-dashboard
-  - prod-employee
-  - prod-image
-  - prod-mail
-  - prod-order
-  - prod-product
-  - prod-store
-  - prod-user
-  - prod-payment
-  - prod-vitrine
-  - prod-rabbitmq
+  - production-test
+  - production-deploy
+  - production-scan
+  - production-rabbitmq
   - proxy
   - proxy-staging
 
@@ -37,6 +25,45 @@ staging-pull-job:
     - echo "HELLO"
   after_script:
     - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/staging && sudo git pull origin staging
+
+image_php:
+  stage: image-build
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH
+      changes:
+        - "images/php8.1-fpm/*"
+  tags:
+    - staging
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/images/php8.1-fpm && sudo docker build -t collectandverything-php .
+
+image_nginx:
+  stage: image-build
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH
+      changes:
+        - "images/nginx-alpine/*"
+  tags:
+    - staging
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/images/nginx-alpine && sudo docker build -t collectandverything-nginx .
+
+image_react:
+  stage: image-build
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH
+      changes:
+        - "images/react/*"
+  tags:
+    - staging
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/images/react && sudo docker build -t collectandverything-react .
 
 staging_build_address:
   stage: staging-build
@@ -512,7 +539,7 @@ staging_scan_mail:
   tags:
     - staging
   script:
-    - sudo trivy mail --severity CRITICAL,HIGH collectandverything-mail:latest
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-mail:latest
 
 staging_build_order:
   stage: staging-build
@@ -568,7 +595,7 @@ staging_scan_order:
   tags:
     - staging
   script:
-    - sudo trivy order --severity CRITICAL,HIGH collectandverything-order:latest
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-order:latest
 
 staging_build_product:
   stage: staging-build
@@ -624,7 +651,7 @@ staging_scan_product:
   tags:
     - staging
   script:
-    - sudo trivy product --severity CRITICAL,HIGH collectandverything-product:latest
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-product:latest
 
 staging_build_store:
   stage: staging-build
@@ -680,7 +707,7 @@ staging_scan_store:
   tags:
     - staging
   script:
-    - sudo trivy store --severity CRITICAL,HIGH collectandverything-store:latest
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-store:latest
 
 staging_build_user:
   stage: staging-build
@@ -736,7 +763,7 @@ staging_scan_user:
   tags:
     - staging
   script:
-    - sudo trivy user --severity CRITICAL,HIGH collectandverything-user:latest
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-user:latest
 
 staging_build_payment:
   stage: staging-build
@@ -792,7 +819,7 @@ staging_scan_payment:
   tags:
     - staging
   script:
-    - sudo trivy payment --severity CRITICAL,HIGH collectandverything-payment:latest
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-payment:latest
 
 staging_build_vitrine:
   stage: staging-build
@@ -822,20 +849,8 @@ staging-rabbitmq-job:
   script:
     - cd /home/admin/docker.collect.verything/rabbitmq && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-prod-pull-job:
-  stage: prod-pull
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-  tags:
-    - production
-  script:
-    - echo "HELLO"
-  after_script:
-    - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/production && sudo git pull origin production
-
-prod-address-job:
-  stage: prod-address
+production_build_address:
+  stage: production-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -845,14 +860,53 @@ prod-address-job:
         - "address/*/*/*"
   environment:
     name: production
-    url: https://api.collectandverything.fr
+    url: https://production.api.collectandverything.fr
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/address && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/address && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
 
-prod-admin-job:
-  stage: prod-admin
+production_test_address:
+  stage: production-test
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --name address-test-php collectandverything-address:latest
+    - sudo docker exec address-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
+    - sudo docker exec address-test-php /bin/bash -c 'php artisan test > test.xml || true'
+    - sudo docker cp address-test-php:/var/www/output.xml phpcs-address.xml
+    - sudo docker cp address-test-php:/var/www/test.xml phpunit-address.xml
+  after_script:
+    - sudo docker rm -f address-test-php
+  artifacts:
+    paths:
+      - "*.xml"
+
+production_deploy_address:
+  stage: production-deploy
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/address && sudo -E docker compose up -d
+
+production_scan_address:
+  stage: production-scan
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-address:latest
+
+production_build_admin:
+  stage: production-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -862,14 +916,53 @@ prod-admin-job:
         - "admin/*/*/*"
   environment:
     name: production
-    url: https://api.collectandverything.fr
+    url: https://production.api.collectandverything.fr
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/admin && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/admin && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
 
-prod-api-job:
-  stage: prod-api
+production_test_admin:
+  stage: production-test
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --name admin-test-php collectandverything-admin:latest
+    - sudo docker exec admin-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
+    - sudo docker exec admin-test-php /bin/bash -c 'php artisan test > test.xml || true'
+    - sudo docker cp admin-test-php:/var/www/output.xml phpcs-admin.xml
+    - sudo docker cp admin-test-php:/var/www/test.xml phpunit-admin.xml
+  after_script:
+    - sudo docker rm -f admin-test-php
+  artifacts:
+    paths:
+      - "*.xml"
+
+production_deploy_admin:
+  stage: production-deploy
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/admin && sudo -E docker compose up -d
+
+production_scan_admin:
+  stage: production-scan
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-admin:latest
+
+production_build_api:
+  stage: production-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -879,14 +972,53 @@ prod-api-job:
         - "api/*/*/*"
   environment:
     name: production
-    url: https://api.collectandverything.fr
+    url: https://production.api.collectandverything.fr
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/api && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/api && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
 
-prod-boutique-job:
-  stage: prod-boutique
+production_test_api:
+  stage: production-test
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --name api-test-php collectandverything-api:latest
+    - sudo docker exec api-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
+    - sudo docker exec api-test-php /bin/bash -c 'php artisan test > test.xml || true'
+    - sudo docker cp api-test-php:/var/www/output.xml phpcs-api.xml
+    - sudo docker cp api-test-php:/var/www/test.xml phpunit-api.xml
+  after_script:
+    - sudo docker rm -f api-test-php
+  artifacts:
+    paths:
+      - "*.xml"
+
+production_deploy_api:
+  stage: production-deploy
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/api && sudo -E docker compose up -d
+
+production_scan_api:
+  stage: production-scan
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-api:latest
+
+production_build_boutique:
+  stage: production-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -897,10 +1029,10 @@ prod-boutique-job:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/boutique && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/boutique && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-prod-bill-job:
-  stage: prod-bill
+production_build_bill:
+  stage: production-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -910,15 +1042,53 @@ prod-bill-job:
         - "bill/*/*/*"
   environment:
     name: production
-    url: https://api.collectandverything.fr
+    url: https://production.bill.collectandverything.fr
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/bill && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/bill && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
 
+production_test_bill:
+  stage: production-test
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --name bill-test-php collectandverything-bill:latest
+    - sudo docker exec bill-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
+    - sudo docker exec bill-test-php /bin/bash -c 'php artisan test > test.xml || true'
+    - sudo docker cp bill-test-php:/var/www/output.xml phpcs-bill.xml
+    - sudo docker cp bill-test-php:/var/www/test.xml phpunit-bill.xml
+  after_script:
+    - sudo docker rm -f bill-test-php
+  artifacts:
+    paths:
+      - "*.xml"
 
-prod-cart-job:
-  stage: prod-cart
+production_deploy_bill:
+  stage: production-deploy
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/bill && sudo -E docker compose up -d
+
+production_scan_bill:
+  stage: production-scan
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-bill:latest
+
+production_build_cart:
+  stage: production-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -928,14 +1098,53 @@ prod-cart-job:
         - "cart/*/*/*"
   environment:
     name: production
-    url: https://api.collectandverything.fr
+    url: https://production.cart.collectandverything.fr
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/cart && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/cart && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
 
-prod-dashboard-job:
-  stage: prod-dashboard
+production_test_cart:
+  stage: production-test
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --name cart-test-php collectandverything-cart:latest
+    - sudo docker exec cart-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
+    - sudo docker exec cart-test-php /bin/bash -c 'php artisan test > test.xml || true'
+    - sudo docker cp cart-test-php:/var/www/output.xml phpcs-cart.xml
+    - sudo docker cp cart-test-php:/var/www/test.xml phpunit-cart.xml
+  after_script:
+    - sudo docker rm -f cart-test-php
+  artifacts:
+    paths:
+      - "*.xml"
+
+production_deploy_cart:
+  stage: production-deploy
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/cart && sudo -E docker compose up -d
+
+production_scan_cart:
+  stage: production-scan
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-cart:latest
+
+production_build_dashboard:
+  stage: production-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -946,10 +1155,10 @@ prod-dashboard-job:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/dashboard && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/dashboard && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
-prod-employee-job:
-  stage: prod-employee
+production_build_employee:
+  stage: production-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -959,14 +1168,53 @@ prod-employee-job:
         - "employee/*/*/*"
   environment:
     name: production
-    url: https://api.collectandverything.fr
+    url: https://production.employee.collectandverything.fr
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/employee && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/employee && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
 
-prod-image-job:
-  stage: prod-image
+production_test_employee:
+  stage: production-test
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --name employee-test-php collectandverything-employee:latest
+    - sudo docker exec employee-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
+    - sudo docker exec employee-test-php /bin/bash -c 'php artisan test > test.xml || true'
+    - sudo docker cp employee-test-php:/var/www/output.xml phpcs-employee.xml
+    - sudo docker cp employee-test-php:/var/www/test.xml phpunit-employee.xml
+  after_script:
+    - sudo docker rm -f employee-test-php
+  artifacts:
+    paths:
+      - "*.xml"
+
+production_deploy_employee:
+  stage: production-deploy
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/employee && sudo -E docker compose up -d
+
+production_scan_employee:
+  stage: production-scan
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-employee:latest
+
+production_build_image:
+  stage: production-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -976,14 +1224,53 @@ prod-image-job:
         - "image/*/*/*"
   environment:
     name: production
-    url: https://api.collectandverything.fr
+    url: https://production.image.collectandverything.fr
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/image && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/image && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
 
-prod-mail-job:
-  stage: prod-mail
+production_test_image:
+  stage: production-test
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --name image-test-php collectandverything-image:latest
+    - sudo docker exec image-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
+    - sudo docker exec image-test-php /bin/bash -c 'php artisan test > test.xml || true'
+    - sudo docker cp image-test-php:/var/www/output.xml phpcs-image.xml
+    - sudo docker cp image-test-php:/var/www/test.xml phpunit-image.xml
+  after_script:
+    - sudo docker rm -f image-test-php
+  artifacts:
+    paths:
+      - "*.xml"
+
+production_deploy_image:
+  stage: production-deploy
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/image && sudo -E docker compose up -d
+
+production_scan_image:
+  stage: production-scan
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-image:latest
+
+production_build_mail:
+  stage: production-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -993,14 +1280,53 @@ prod-mail-job:
         - "mail/*/*/*"
   environment:
     name: production
-    url: https://api.collectandverything.fr
+    url: https://production.mail.collectandverything.fr
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/mail && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/mail && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
 
-prod-order-job:
-  stage: prod-order
+production_test_mail:
+  stage: production-test
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --name mail-test-php collectandverything-mail:latest
+    - sudo docker exec mail-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
+    - sudo docker exec mail-test-php /bin/bash -c 'php artisan test > test.xml || true'
+    - sudo docker cp mail-test-php:/var/www/output.xml phpcs-mail.xml
+    - sudo docker cp mail-test-php:/var/www/test.xml phpunit-mail.xml
+  after_script:
+    - sudo docker rm -f mail-test-php
+  artifacts:
+    paths:
+      - "*.xml"
+
+production_deploy_mail:
+  stage: production-deploy
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/mail && sudo -E docker compose up -d
+
+production_scan_mail:
+  stage: production-scan
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-mail:latest
+
+production_build_order:
+  stage: production-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -1010,14 +1336,53 @@ prod-order-job:
         - "order/*/*/*"
   environment:
     name: production
-    url: https://api.collectandverything.fr
+    url: https://production.order.collectandverything.fr
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/order && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/order && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
 
-prod-product-job:
-  stage: prod-product
+production_test_order:
+  stage: production-test
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --name order-test-php collectandverything-order:latest
+    - sudo docker exec order-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
+    - sudo docker exec order-test-php /bin/bash -c 'php artisan test > test.xml || true'
+    - sudo docker cp order-test-php:/var/www/output.xml phpcs-order.xml
+    - sudo docker cp order-test-php:/var/www/test.xml phpunit-order.xml
+  after_script:
+    - sudo docker rm -f order-test-php
+  artifacts:
+    paths:
+      - "*.xml"
+
+production_deploy_order:
+  stage: production-deploy
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/order && sudo -E docker compose up -d
+
+production_scan_order:
+  stage: production-scan
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-order:latest
+
+production_build_product:
+  stage: production-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -1027,14 +1392,53 @@ prod-product-job:
         - "product/*/*/*"
   environment:
     name: production
-    url: https://api.collectandverything.fr
+    url: https://production.product.collectandverything.fr
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/product && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/product && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
 
-prod-store-job:
-  stage: prod-store
+production_test_product:
+  stage: production-test
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --name product-test-php collectandverything-product:latest
+    - sudo docker exec product-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
+    - sudo docker exec product-test-php /bin/bash -c 'php artisan test > test.xml || true'
+    - sudo docker cp product-test-php:/var/www/output.xml phpcs-product.xml
+    - sudo docker cp product-test-php:/var/www/test.xml phpunit-product.xml
+  after_script:
+    - sudo docker rm -f product-test-php
+  artifacts:
+    paths:
+      - "*.xml"
+
+production_deploy_product:
+  stage: production-deploy
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/product && sudo -E docker compose up -d
+
+production_scan_product:
+  stage: production-scan
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-product:latest
+
+production_build_store:
+  stage: production-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -1044,14 +1448,53 @@ prod-store-job:
         - "store/*/*/*"
   environment:
     name: production
-    url: https://api.collectandverything.fr
+    url: https://production.store.collectandverything.fr
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/store && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/store && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
 
-prod-user-job:
-  stage: prod-user
+production_test_store:
+  stage: production-test
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --name store-test-php collectandverything-store:latest
+    - sudo docker exec store-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
+    - sudo docker exec store-test-php /bin/bash -c 'php artisan test > test.xml || true'
+    - sudo docker cp store-test-php:/var/www/output.xml phpcs-store.xml
+    - sudo docker cp store-test-php:/var/www/test.xml phpunit-store.xml
+  after_script:
+    - sudo docker rm -f store-test-php
+  artifacts:
+    paths:
+      - "*.xml"
+
+production_deploy_store:
+  stage: production-deploy
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/store && sudo -E docker compose up -d
+
+production_scan_store:
+  stage: production-scan
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-store:latest
+
+production_build_user:
+  stage: production-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -1061,14 +1504,53 @@ prod-user-job:
         - "user/*/*/*"
   environment:
     name: production
-    url: https://api.collectandverything.fr
+    url: https://production.user.collectandverything.fr
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/user && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/user && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
 
-prod-payment-job:
-  stage: prod-payment
+production_test_user:
+  stage: production-test
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --name user-test-php collectandverything-user:latest
+    - sudo docker exec user-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
+    - sudo docker exec user-test-php /bin/bash -c 'php artisan test > test.xml || true'
+    - sudo docker cp user-test-php:/var/www/output.xml phpcs-user.xml
+    - sudo docker cp user-test-php:/var/www/test.xml phpunit-user.xml
+  after_script:
+    - sudo docker rm -f user-test-php
+  artifacts:
+    paths:
+      - "*.xml"
+
+production_deploy_user:
+  stage: production-deploy
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/user && sudo -E docker compose up -d
+
+production_scan_user:
+  stage: production-scan
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-user:latest
+
+production_build_payment:
+  stage: production-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -1078,15 +1560,53 @@ prod-payment-job:
         - "payment/*/*/*"
   environment:
     name: production
-    url: https://api.collectandverything.fr
+    url: https://production.payment.collectandverything.fr
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/payment && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/payment && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
 
+production_test_payment:
+  stage: production-test
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --name payment-test-php collectandverything-payment:latest
+    - sudo docker exec payment-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
+    - sudo docker exec payment-test-php /bin/bash -c 'php artisan test > test.xml || true'
+    - sudo docker cp payment-test-php:/var/www/output.xml phpcs-payment.xml
+    - sudo docker cp payment-test-php:/var/www/test.xml phpunit-payment.xml
+  after_script:
+    - sudo docker rm -f payment-test-php
+  artifacts:
+    paths:
+      - "*.xml"
 
-prod-vitrine-job:
-  stage: prod-vitrine
+production_deploy_payment:
+  stage: production-deploy
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/payment && sudo -E docker compose up -d
+
+production_scan_payment:
+  stage: production-scan
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-payment:latest
+
+production_build_vitrine:
+  stage: production-build
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -1097,7 +1617,21 @@ prod-vitrine-job:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/vitrine && sudo echo "CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH | sudo tee -a .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/vitrine && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+
+production-rabbitmq-job:
+  stage: production-rabbitmq
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "rabbitmq/*"
+        - "rabbitmq/*/*"
+        - "rabbitmq/*/*/*"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/rabbitmq && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 
 prod-rabbitmq-job:
