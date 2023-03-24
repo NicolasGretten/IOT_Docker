@@ -53,15 +53,6 @@
 
     {"name":"add_to_cart","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
 
-    {"name":"order_request_store","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"order_request_cart","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"order_request_user","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"store_response_order","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"cart_response_order","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"user_response_order","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-
-    {"name":"create_order","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-
     {"name":"product_image","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
 
     {"name":"confirm_cart","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
