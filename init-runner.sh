@@ -105,5 +105,7 @@ sudo docker exec bill-php /bin/bash -c 'php artisan migrate:rollback --force'
 sudo docker exec payment-php /bin/bash -c 'php artisan migrate:rollback --force'
 sudo docker exec employee-php /bin/bash -c 'php artisan migrate:rollback --force'
 
+docker exec -i postgresql /bin/bash -c "pg_dump -U collectandverything -d addresses -d admins -d api -d carts -d employees -d images -d mails -d orders -d products -d stores -d users -d bills -d payments" > /home/admin/docker.collect.verything/backup/dump.sql
+
 
 
