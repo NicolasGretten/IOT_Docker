@@ -6,10 +6,12 @@ stages:
   - staging-scan
   - staging-test
   - staging-deploy
+  - staging-unit-test
   - production-build
   - production-scan
   - production-test
   - production-deploy
+  - production-unit-test
   - rabbitmq
   - proxy
 
@@ -21,7 +23,7 @@ staging-pull-job:
   tags:
     - staging
   script:
-    - echo "HELLO"
+    - echo "PULL JOB"
   after_script:
     - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/staging && sudo git pull origin staging
 
@@ -61,42 +63,6 @@ staging_image_react:
   script:
     - cd /home/admin/docker.collect.verything/images/react && sudo docker build -t collectandverything-react .
 
-production_image_php:
-  stage: images
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "images/php8.1-fpm/*"
-  tags:
-    - production
-  script:
-    - cd /home/admin/docker.collect.verything/images/php8.1-fpm && sudo docker build -t collectandverything-php .
-
-production_image_nginx:
-  stage: images
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "images/nginx-alpine/*"
-  tags:
-    - production
-  script:
-    - cd /home/admin/docker.collect.verything/images/nginx-alpine && sudo docker build -t collectandverything-nginx .
-
-production_image_react:
-  stage: images
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "images/react/*"
-  tags:
-    - production
-  script:
-    - cd /home/admin/docker.collect.verything/images/react && sudo docker build -t collectandverything-react .
-
 staging_build_address:
   stage: staging-build
   allow_failure: false
@@ -129,9 +95,9 @@ staging_test_address:
   script:
     - sudo docker run -d --name address-test-php collectandverything-address:latest
     - sudo docker exec address-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec address-test-php /bin/bash -c 'php artisan test > test.xml || true'
+#    - sudo docker exec address-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp address-test-php:/var/www/output.xml phpcs-address.xml
-    - sudo docker cp address-test-php:/var/www/test.xml phpunit-address.xml
+#    - sudo docker cp address-test-php:/var/www/test.xml phpunit-address.xml
   after_script:
     - sudo docker rm -f address-test-php
   artifacts:
@@ -167,6 +133,21 @@ staging_scan_address:
     - staging
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-address:latest
+
+staging_unit_test_address:
+  stage: staging-unit-test
+  needs: [staging_deploy_address]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "address/*"
+        - "address/*/*"
+        - "address/*/*/*"
+  tags:
+    - staging
+  script:
+    - sudo docker exec address-php /bin/bash -c 'php artisan test'
 
 staging_build_admin:
   stage: staging-build
@@ -239,6 +220,21 @@ staging_scan_admin:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-admin:latest
 
+staging_unit_test_admin:
+  stage: staging-unit-test
+  needs: [staging_deploy_admin]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "admin/*"
+        - "admin/*/*"
+        - "admin/*/*/*"
+  tags:
+    - staging
+  script:
+    - sudo docker exec admin-php /bin/bash -c 'php artisan test'
+
 staging_build_api:
   stage: staging-build
   allow_failure: false
@@ -309,6 +305,21 @@ staging_scan_api:
     - staging
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-api:latest
+
+staging_unit_test_api:
+  stage: staging-unit-test
+  needs: [staging_deploy_api]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "api/*"
+        - "api/*/*"
+        - "api/*/*/*"
+  tags:
+    - staging
+  script:
+    - sudo docker exec api-php /bin/bash -c 'php artisan test'
 
 staging_build_boutique:
   stage: staging-build
@@ -395,6 +406,21 @@ staging_scan_bill:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-bill:latest
 
+staging_unit_test_bill:
+  stage: staging-unit-test
+  needs: [staging_deploy_bill]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "bill/*"
+        - "bill/*/*"
+        - "bill/*/*/*"
+  tags:
+    - staging
+  script:
+    - sudo docker exec bill-php /bin/bash -c 'php artisan test'
+
 staging_build_cart:
   stage: staging-build
   allow_failure: false
@@ -465,6 +491,21 @@ staging_scan_cart:
     - staging
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-cart:latest
+
+staging_unit_test_cart:
+  stage: staging-unit-test
+  needs: [staging_deploy_cart]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "cart/*"
+        - "cart/*/*"
+        - "cart/*/*/*"
+  tags:
+    - staging
+  script:
+    - sudo docker exec cart-php /bin/bash -c 'php artisan test'
 
 staging_build_dashboard:
   stage: staging-build
@@ -551,6 +592,21 @@ staging_scan_employee:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-employee:latest
 
+staging_unit_test_employee:
+  stage: staging-unit-test
+  needs: [staging_deploy_employee]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "employee/*"
+        - "employee/*/*"
+        - "employee/*/*/*"
+  tags:
+    - staging
+  script:
+    - sudo docker exec employee-php /bin/bash -c 'php artisan test'
+
 staging_build_image:
   stage: staging-build
   allow_failure: false
@@ -621,6 +677,21 @@ staging_scan_image:
     - staging
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-image:latest
+
+staging_unit_test_image:
+  stage: staging-unit-test
+  needs: [staging_deploy_image]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "image/*"
+        - "image/*/*"
+        - "image/*/*/*"
+  tags:
+    - staging
+  script:
+    - sudo docker exec image-php /bin/bash -c 'php artisan test'
 
 staging_build_mail:
   stage: staging-build
@@ -693,6 +764,21 @@ staging_scan_mail:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-mail:latest
 
+staging_unit_test_mail:
+  stage: staging-unit-test
+  needs: [staging_deploy_mail]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "mail/*"
+        - "mail/*/*"
+        - "mail/*/*/*"
+  tags:
+    - staging
+  script:
+    - sudo docker exec mail-php /bin/bash -c 'php artisan test'
+
 staging_build_order:
   stage: staging-build
   allow_failure: false
@@ -763,6 +849,21 @@ staging_scan_order:
     - staging
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-order:latest
+
+staging_unit_test_order:
+  stage: staging-unit-test
+  needs: [staging_deploy_order]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "order/*"
+        - "order/*/*"
+        - "order/*/*/*"
+  tags:
+    - staging
+  script:
+    - sudo docker exec order-php /bin/bash -c 'php artisan test'
 
 staging_build_product:
   stage: staging-build
@@ -835,6 +936,21 @@ staging_scan_product:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-product:latest
 
+staging_unit_test_product:
+  stage: staging-unit-test
+  needs: [staging_deploy_product]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "product/*"
+        - "product/*/*"
+        - "product/*/*/*"
+  tags:
+    - staging
+  script:
+    - sudo docker exec product-php /bin/bash -c 'php artisan test'
+
 staging_build_store:
   stage: staging-build
   allow_failure: false
@@ -905,6 +1021,21 @@ staging_scan_store:
     - staging
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-store:latest
+
+staging_unit_test_store:
+  stage: staging-unit-test
+  needs: [staging_deploy_store]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "store/*"
+        - "store/*/*"
+        - "store/*/*/*"
+  tags:
+    - staging
+  script:
+    - sudo docker exec store-php /bin/bash -c 'php artisan test'
 
 staging_build_user:
   stage: staging-build
@@ -977,6 +1108,21 @@ staging_scan_user:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-user:latest
 
+staging_unit_test_user:
+  stage: staging-unit-test
+  needs: [staging_deploy_user]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "user/*"
+        - "user/*/*"
+        - "user/*/*/*"
+  tags:
+    - staging
+  script:
+    - sudo docker exec user-php /bin/bash -c 'php artisan test'
+
 staging_build_payment:
   stage: staging-build
   allow_failure: false
@@ -1048,6 +1194,21 @@ staging_scan_payment:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-payment:latest
 
+staging_unit_test_payment:
+  stage: staging-unit-test
+  needs: [staging_deploy_payment]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "payment/*"
+        - "payment/*/*"
+        - "payment/*/*/*"
+  tags:
+    - staging
+  script:
+    - sudo docker exec payment-php /bin/bash -c 'php artisan test'
+
 staging_build_vitrine:
   stage: staging-build
   allow_failure: false
@@ -1085,9 +1246,45 @@ production-pull-job:
   tags:
     - production
   script:
-    - echo "HELLO"
+    - echo "PULL JOB"
   after_script:
-    - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/staging && sudo git pull origin staging
+    - cd /home/admin/docker.collect.verything && sudo git reset --hard origin/production && sudo git pull origin production
+
+production_image_php:
+  stage: images
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "images/php8.1-fpm/*"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/images/php8.1-fpm && sudo docker build -t collectandverything-php .
+
+production_image_nginx:
+  stage: images
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "images/nginx-alpine/*"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/images/nginx-alpine && sudo docker build -t collectandverything-nginx .
+
+production_image_react:
+  stage: images
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "images/react/*"
+  tags:
+    - production
+  script:
+    - cd /home/admin/docker.collect.verything/images/react && sudo docker build -t collectandverything-react .
 
 production_build_address:
   stage: production-build
@@ -1108,17 +1305,22 @@ production_build_address:
 
 production_test_address:
   stage: production-test
+  needs: [production_build_address]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "address/*"
+        - "address/*/*"
+        - "address/*/*/*"
   tags:
     - production
   script:
     - sudo docker run -d --name address-test-php collectandverything-address:latest
     - sudo docker exec address-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec address-test-php /bin/bash -c 'php artisan test > test.xml || true'
+    #    - sudo docker exec address-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp address-test-php:/var/www/output.xml phpcs-address.xml
-    - sudo docker cp address-test-php:/var/www/test.xml phpunit-address.xml
+  #    - sudo docker cp address-test-php:/var/www/test.xml phpunit-address.xml
   after_script:
     - sudo docker rm -f address-test-php
   artifacts:
@@ -1127,9 +1329,14 @@ production_test_address:
 
 production_deploy_address:
   stage: production-deploy
+  needs: [production_test_address]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "address/*"
+        - "address/*/*"
+        - "address/*/*/*"
   tags:
     - production
   script:
@@ -1137,13 +1344,33 @@ production_deploy_address:
 
 production_scan_address:
   stage: production-scan
+  needs: [production_build_address]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "address/*"
+        - "address/*/*"
+        - "address/*/*/*"
   tags:
     - production
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-address:latest
+
+production_unit_test_address:
+  stage: production-unit-test
+  needs: [production_deploy_address]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "address/*"
+        - "address/*/*"
+        - "address/*/*/*"
+  tags:
+    - production
+  script:
+    - sudo docker exec address-php /bin/bash -c 'php artisan test'
 
 production_build_admin:
   stage: production-build
@@ -1164,9 +1391,14 @@ production_build_admin:
 
 production_test_admin:
   stage: production-test
+  needs: [production_build_admin]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "admin/*"
+        - "admin/*/*"
+        - "admin/*/*/*"
   tags:
     - production
   script:
@@ -1183,9 +1415,14 @@ production_test_admin:
 
 production_deploy_admin:
   stage: production-deploy
+  needs: [production_test_admin]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "admin/*"
+        - "admin/*/*"
+        - "admin/*/*/*"
   tags:
     - production
   script:
@@ -1193,13 +1430,33 @@ production_deploy_admin:
 
 production_scan_admin:
   stage: production-scan
+  needs: [production_build_admin]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "admin/*"
+        - "admin/*/*"
+        - "admin/*/*/*"
   tags:
     - production
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-admin:latest
+
+production_unit_test_admin:
+  stage: production-unit-test
+  needs: [production_deploy_admin]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "admin/*"
+        - "admin/*/*"
+        - "admin/*/*/*"
+  tags:
+    - production
+  script:
+    - sudo docker exec admin-php /bin/bash -c 'php artisan test'
 
 production_build_api:
   stage: production-build
@@ -1220,9 +1477,14 @@ production_build_api:
 
 production_test_api:
   stage: production-test
+  needs: [production_build_api]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "api/*"
+        - "api/*/*"
+        - "api/*/*/*"
   tags:
     - production
   script:
@@ -1239,9 +1501,14 @@ production_test_api:
 
 production_deploy_api:
   stage: production-deploy
+  needs: [production_test_api]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "api/*"
+        - "api/*/*"
+        - "api/*/*/*"
   tags:
     - production
   script:
@@ -1249,13 +1516,33 @@ production_deploy_api:
 
 production_scan_api:
   stage: production-scan
+  needs: [production_build_api]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "api/*"
+        - "api/*/*"
+        - "api/*/*/*"
   tags:
     - production
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-api:latest
+
+production_unit_test_api:
+  stage: production-unit-test
+  needs: [production_deploy_api]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "api/*"
+        - "api/*/*"
+        - "api/*/*/*"
+  tags:
+    - production
+  script:
+    - sudo docker exec api-php /bin/bash -c 'php artisan test'
 
 production_build_boutique:
   stage: production-build
@@ -1290,9 +1577,14 @@ production_build_bill:
 
 production_test_bill:
   stage: production-test
+  needs: [production_build_bill]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "bill/*"
+        - "bill/*/*"
+        - "bill/*/*/*"
   tags:
     - production
   script:
@@ -1309,9 +1601,14 @@ production_test_bill:
 
 production_deploy_bill:
   stage: production-deploy
+  needs: [production_test_bill]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "bill/*"
+        - "bill/*/*"
+        - "bill/*/*/*"
   tags:
     - production
   script:
@@ -1319,13 +1616,33 @@ production_deploy_bill:
 
 production_scan_bill:
   stage: production-scan
+  needs: [production_build_bill]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "bill/*"
+        - "bill/*/*"
+        - "bill/*/*/*"
   tags:
     - production
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-bill:latest
+
+production_unit_test_bill:
+  stage: production-unit-test
+  needs: [production_deploy_bill]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "bill/*"
+        - "bill/*/*"
+        - "bill/*/*/*"
+  tags:
+    - production
+  script:
+    - sudo docker exec bill-php /bin/bash -c 'php artisan test'
 
 production_build_cart:
   stage: production-build
@@ -1346,9 +1663,14 @@ production_build_cart:
 
 production_test_cart:
   stage: production-test
+  needs: [production_build_cart]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "cart/*"
+        - "cart/*/*"
+        - "cart/*/*/*"
   tags:
     - production
   script:
@@ -1365,9 +1687,14 @@ production_test_cart:
 
 production_deploy_cart:
   stage: production-deploy
+  needs: [production_test_cart]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "cart/*"
+        - "cart/*/*"
+        - "cart/*/*/*"
   tags:
     - production
   script:
@@ -1375,13 +1702,33 @@ production_deploy_cart:
 
 production_scan_cart:
   stage: production-scan
+  needs: [production_build_cart]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "cart/*"
+        - "cart/*/*"
+        - "cart/*/*/*"
   tags:
     - production
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-cart:latest
+
+production_unit_test_cart:
+  stage: production-unit-test
+  needs: [production_deploy_cart]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "cart/*"
+        - "cart/*/*"
+        - "cart/*/*/*"
+  tags:
+    - production
+  script:
+    - sudo docker exec cart-php /bin/bash -c 'php artisan test'
 
 production_build_dashboard:
   stage: production-build
@@ -1416,9 +1763,14 @@ production_build_employee:
 
 production_test_employee:
   stage: production-test
+  needs: [production_build_employee]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "employee/*"
+        - "employee/*/*"
+        - "employee/*/*/*"
   tags:
     - production
   script:
@@ -1435,9 +1787,14 @@ production_test_employee:
 
 production_deploy_employee:
   stage: production-deploy
+  needs: [production_test_employee]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "employee/*"
+        - "employee/*/*"
+        - "employee/*/*/*"
   tags:
     - production
   script:
@@ -1445,13 +1802,33 @@ production_deploy_employee:
 
 production_scan_employee:
   stage: production-scan
+  needs: [production_build_employee]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "employee/*"
+        - "employee/*/*"
+        - "employee/*/*/*"
   tags:
     - production
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-employee:latest
+
+production_unit_test_employee:
+  stage: production-unit-test
+  needs: [production_deploy_employee]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "employee/*"
+        - "employee/*/*"
+        - "employee/*/*/*"
+  tags:
+    - production
+  script:
+    - sudo docker exec employee-php /bin/bash -c 'php artisan test'
 
 production_build_image:
   stage: production-build
@@ -1472,9 +1849,14 @@ production_build_image:
 
 production_test_image:
   stage: production-test
+  needs: [production_build_image]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "image/*"
+        - "image/*/*"
+        - "image/*/*/*"
   tags:
     - production
   script:
@@ -1491,9 +1873,14 @@ production_test_image:
 
 production_deploy_image:
   stage: production-deploy
+  needs: [production_test_image]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "image/*"
+        - "image/*/*"
+        - "image/*/*/*"
   tags:
     - production
   script:
@@ -1501,13 +1888,33 @@ production_deploy_image:
 
 production_scan_image:
   stage: production-scan
+  needs: [production_build_image]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "image/*"
+        - "image/*/*"
+        - "image/*/*/*"
   tags:
     - production
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-image:latest
+
+production_unit_test_image:
+  stage: production-unit-test
+  needs: [production_deploy_image]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "image/*"
+        - "image/*/*"
+        - "image/*/*/*"
+  tags:
+    - production
+  script:
+    - sudo docker exec image-php /bin/bash -c 'php artisan test'
 
 production_build_mail:
   stage: production-build
@@ -1528,9 +1935,14 @@ production_build_mail:
 
 production_test_mail:
   stage: production-test
+  needs: [production_build_mail]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "mail/*"
+        - "mail/*/*"
+        - "mail/*/*/*"
   tags:
     - production
   script:
@@ -1547,9 +1959,14 @@ production_test_mail:
 
 production_deploy_mail:
   stage: production-deploy
+  needs: [production_test_mail]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "mail/*"
+        - "mail/*/*"
+        - "mail/*/*/*"
   tags:
     - production
   script:
@@ -1557,13 +1974,33 @@ production_deploy_mail:
 
 production_scan_mail:
   stage: production-scan
+  needs: [production_build_mail]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "mail/*"
+        - "mail/*/*"
+        - "mail/*/*/*"
   tags:
     - production
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-mail:latest
+
+production_unit_test_mail:
+  stage: production-unit-test
+  needs: [production_deploy_mail]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "mail/*"
+        - "mail/*/*"
+        - "mail/*/*/*"
+  tags:
+    - production
+  script:
+    - sudo docker exec mail-php /bin/bash -c 'php artisan test'
 
 production_build_order:
   stage: production-build
@@ -1584,9 +2021,14 @@ production_build_order:
 
 production_test_order:
   stage: production-test
+  needs: [production_build_order]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "order/*"
+        - "order/*/*"
+        - "order/*/*/*"
   tags:
     - production
   script:
@@ -1603,9 +2045,14 @@ production_test_order:
 
 production_deploy_order:
   stage: production-deploy
+  needs: [production_test_order]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "order/*"
+        - "order/*/*"
+        - "order/*/*/*"
   tags:
     - production
   script:
@@ -1613,13 +2060,33 @@ production_deploy_order:
 
 production_scan_order:
   stage: production-scan
+  needs: [production_build_order]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "order/*"
+        - "order/*/*"
+        - "order/*/*/*"
   tags:
     - production
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-order:latest
+
+production_unit_test_order:
+  stage: production-unit-test
+  needs: [production_deploy_order]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "order/*"
+        - "order/*/*"
+        - "order/*/*/*"
+  tags:
+    - production
+  script:
+    - sudo docker exec order-php /bin/bash -c 'php artisan test'
 
 production_build_product:
   stage: production-build
@@ -1640,9 +2107,14 @@ production_build_product:
 
 production_test_product:
   stage: production-test
+  needs: [production_build_product]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "product/*"
+        - "product/*/*"
+        - "product/*/*/*"
   tags:
     - production
   script:
@@ -1659,9 +2131,14 @@ production_test_product:
 
 production_deploy_product:
   stage: production-deploy
+  needs: [production_test_product]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "product/*"
+        - "product/*/*"
+        - "product/*/*/*"
   tags:
     - production
   script:
@@ -1669,13 +2146,33 @@ production_deploy_product:
 
 production_scan_product:
   stage: production-scan
+  needs: [production_build_product]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "product/*"
+        - "product/*/*"
+        - "product/*/*/*"
   tags:
     - production
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-product:latest
+
+production_unit_test_product:
+  stage: production-unit-test
+  needs: [production_deploy_product]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "product/*"
+        - "product/*/*"
+        - "product/*/*/*"
+  tags:
+    - production
+  script:
+    - sudo docker exec product-php /bin/bash -c 'php artisan test'
 
 production_build_store:
   stage: production-build
@@ -1696,9 +2193,14 @@ production_build_store:
 
 production_test_store:
   stage: production-test
+  needs: [production_build_store]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "store/*"
+        - "store/*/*"
+        - "store/*/*/*"
   tags:
     - production
   script:
@@ -1715,9 +2217,14 @@ production_test_store:
 
 production_deploy_store:
   stage: production-deploy
+  needs: [production_test_store]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "store/*"
+        - "store/*/*"
+        - "store/*/*/*"
   tags:
     - production
   script:
@@ -1725,13 +2232,33 @@ production_deploy_store:
 
 production_scan_store:
   stage: production-scan
+  needs: [production_build_store]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "store/*"
+        - "store/*/*"
+        - "store/*/*/*"
   tags:
     - production
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-store:latest
+
+production_unit_test_store:
+  stage: production-unit-test
+  needs: [production_deploy_store]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "store/*"
+        - "store/*/*"
+        - "store/*/*/*"
+  tags:
+    - production
+  script:
+    - sudo docker exec store-php /bin/bash -c 'php artisan test'
 
 production_build_user:
   stage: production-build
@@ -1752,9 +2279,14 @@ production_build_user:
 
 production_test_user:
   stage: production-test
+  needs: [production_build_user]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "user/*"
+        - "user/*/*"
+        - "user/*/*/*"
   tags:
     - production
   script:
@@ -1771,9 +2303,14 @@ production_test_user:
 
 production_deploy_user:
   stage: production-deploy
+  needs: [production_test_user]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "user/*"
+        - "user/*/*"
+        - "user/*/*/*"
   tags:
     - production
   script:
@@ -1781,13 +2318,33 @@ production_deploy_user:
 
 production_scan_user:
   stage: production-scan
+  needs: [production_build_user]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "user/*"
+        - "user/*/*"
+        - "user/*/*/*"
   tags:
     - production
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-user:latest
+
+production_unit_test_user:
+  stage: production-unit-test
+  needs: [production_deploy_user]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "user/*"
+        - "user/*/*"
+        - "user/*/*/*"
+  tags:
+    - production
+  script:
+    - sudo docker exec user-php /bin/bash -c 'php artisan test'
 
 production_build_payment:
   stage: production-build
@@ -1808,9 +2365,14 @@ production_build_payment:
 
 production_test_payment:
   stage: production-test
+  needs: [production_build_payment]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "payment/*"
+        - "payment/*/*"
+        - "payment/*/*/*"
   tags:
     - production
   script:
@@ -1827,9 +2389,14 @@ production_test_payment:
 
 production_deploy_payment:
   stage: production-deploy
+  needs: [production_test_payment]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "payment/*"
+        - "payment/*/*"
+        - "payment/*/*/*"
   tags:
     - production
   script:
@@ -1837,13 +2404,33 @@ production_deploy_payment:
 
 production_scan_payment:
   stage: production-scan
+  needs: [production_build_payment]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "payment/*"
+        - "payment/*/*"
+        - "payment/*/*/*"
   tags:
     - production
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-payment:latest
+
+production_unit_test_payment:
+  stage: production-unit-test
+  needs: [production_deploy_payment]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "payment/*"
+        - "payment/*/*"
+        - "payment/*/*/*"
+  tags:
+    - production
+  script:
+    - sudo docker exec payment-php /bin/bash -c 'php artisan test'
 
 production_build_vitrine:
   stage: production-build
@@ -1871,7 +2458,7 @@ production_rabbitmq:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/rabbitmq && sudo -E docker compose down && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/rabbitmq && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 production_proxy:
   stage: proxy
@@ -1906,7 +2493,6 @@ staging_proxy:
   script:
     - cd /home/admin/docker.collect.verything/proxy-staging && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
   when: manual
-
 
 after_script:
   - cd /home/admin/docker.collect.verything && sudo docker image prune --force
