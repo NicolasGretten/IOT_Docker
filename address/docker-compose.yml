@@ -14,9 +14,7 @@ services:
       - collectandverything
   php-fpm:
     container_name: address-php
-    env_file:
-      - '.env'
-      - '.env.testing'
+    env_file: '.env'
     build:
       context: .
       args:
