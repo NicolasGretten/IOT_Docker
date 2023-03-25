@@ -3,15 +3,15 @@ stages:
   - production-pull
   - images
   - staging-build
-  - staging-scan
   - staging-test
+  - staging-code-quality
+  - staging-scan
   - staging-deploy
-  - staging-unit-test
   - production-build
-  - production-scan
   - production-test
+  - production-code-quality
+  - production-scan
   - production-deploy
-  - production-unit-test
   - rabbitmq
   - proxy
 
@@ -93,31 +93,28 @@ staging_test_address:
   tags:
     - staging
   script:
-    - sudo docker run -d --name address-test-php collectandverything-address:latest
+    - sudo docker run -d --network=collectandverything --name address-test-php collectandverything-address:latest
+    - sudo docker exec address-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f address-test-php
+
+staging_code_quality_address:
+  stage: staging-code-quality
+  allow_failure: false
+  needs: [staging_build_address]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+  tags:
+    - staging
+  script:
+    - sudo docker run -d --network=collectandverything --name address-test-php collectandverything-address:latest
     - sudo docker exec address-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-#    - sudo docker exec address-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp address-test-php:/var/www/output.xml phpcs-address.xml
-#    - sudo docker cp address-test-php:/var/www/test.xml phpunit-address.xml
   after_script:
     - sudo docker rm -f address-test-php
   artifacts:
     paths:
       - "*.xml"
-
-staging_deploy_address:
-  stage: staging-deploy
-  needs: [staging_test_address]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "staging"
-      changes:
-        - "address/*"
-        - "address/*/*"
-        - "address/*/*/*"
-  tags:
-    - staging
-  script:
-    - cd /home/admin/docker.collect.verything/address && sudo -E docker compose up -d
 
 staging_scan_address:
   stage: staging-scan
@@ -134,9 +131,9 @@ staging_scan_address:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-address:latest
 
-staging_unit_test_address:
-  stage: staging-unit-test
-  needs: [staging_deploy_address]
+staging_deploy_address:
+  stage: staging-deploy
+  needs: [staging_test_address]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -147,7 +144,7 @@ staging_unit_test_address:
   tags:
     - staging
   script:
-    - sudo docker exec address-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/address && sudo -E docker compose up -d
 
 staging_build_admin:
   stage: staging-build
@@ -179,31 +176,28 @@ staging_test_admin:
   tags:
     - staging
   script:
-    - sudo docker run -d --name admin-test-php collectandverything-admin:latest
+    - sudo docker run -d --network=collectandverything --name admin-test-php collectandverything-admin:latest
+    - sudo docker exec admin-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f admin-test-php
+
+staging_code_quality_admin:
+  stage: staging-code-quality
+  allow_failure: false
+  needs: [staging_build_admin]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+  tags:
+    - staging
+  script:
+    - sudo docker run -d --network=collectandverything --name admin-test-php collectandverything-admin:latest
     - sudo docker exec admin-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec admin-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp admin-test-php:/var/www/output.xml phpcs-admin.xml
-    - sudo docker cp admin-test-php:/var/www/test.xml phpunit-admin.xml
   after_script:
     - sudo docker rm -f admin-test-php
   artifacts:
     paths:
       - "*.xml"
-
-staging_deploy_admin:
-  stage: staging-deploy
-  needs: [staging_test_admin]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "staging"
-      changes:
-        - "admin/*"
-        - "admin/*/*"
-        - "admin/*/*/*"
-  tags:
-    - staging
-  script:
-    - cd /home/admin/docker.collect.verything/admin && sudo -E docker compose up -d
 
 staging_scan_admin:
   stage: staging-scan
@@ -220,9 +214,9 @@ staging_scan_admin:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-admin:latest
 
-staging_unit_test_admin:
-  stage: staging-unit-test
-  needs: [staging_deploy_admin]
+staging_deploy_admin:
+  stage: staging-deploy
+  needs: [staging_test_admin]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -233,7 +227,7 @@ staging_unit_test_admin:
   tags:
     - staging
   script:
-    - sudo docker exec admin-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/admin && sudo -E docker compose up -d
 
 staging_build_api:
   stage: staging-build
@@ -265,31 +259,28 @@ staging_test_api:
   tags:
     - staging
   script:
-    - sudo docker run -d --name api-test-php collectandverything-api:latest
+    - sudo docker run -d --network=collectandverything --name api-test-php collectandverything-api:latest
+    - sudo docker exec api-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f api-test-php
+
+staging_code_quality_api:
+  stage: staging-code-quality
+  allow_failure: false
+  needs: [staging_build_api]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+  tags:
+    - staging
+  script:
+    - sudo docker run -d --network=collectandverything --name api-test-php collectandverything-api:latest
     - sudo docker exec api-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec api-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp api-test-php:/var/www/output.xml phpcs-api.xml
-    - sudo docker cp api-test-php:/var/www/test.xml phpunit-api.xml
   after_script:
     - sudo docker rm -f api-test-php
   artifacts:
     paths:
       - "*.xml"
-
-staging_deploy_api:
-  stage: staging-deploy
-  needs: [staging_test_api]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "staging"
-      changes:
-        - "api/*"
-        - "api/*/*"
-        - "api/*/*/*"
-  tags:
-    - staging
-  script:
-    - cd /home/admin/docker.collect.verything/api && sudo -E docker compose up -d
 
 staging_scan_api:
   stage: staging-scan
@@ -306,9 +297,9 @@ staging_scan_api:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-api:latest
 
-staging_unit_test_api:
-  stage: staging-unit-test
-  needs: [staging_deploy_api]
+staging_deploy_api:
+  stage: staging-deploy
+  needs: [staging_test_api]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -319,7 +310,7 @@ staging_unit_test_api:
   tags:
     - staging
   script:
-    - sudo docker exec api-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/api && sudo -E docker compose up -d
 
 staging_build_boutique:
   stage: staging-build
@@ -365,31 +356,28 @@ staging_test_bill:
   tags:
     - staging
   script:
-    - sudo docker run -d --name bill-test-php collectandverything-bill:latest
+    - sudo docker run -d --network=collectandverything --name bill-test-php collectandverything-bill:latest
+    - sudo docker exec bill-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f bill-test-php
+
+staging_code_quality_bill:
+  stage: staging-code-quality
+  allow_failure: false
+  needs: [staging_build_bill]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+  tags:
+    - staging
+  script:
+    - sudo docker run -d --network=collectandverything --name bill-test-php collectandverything-bill:latest
     - sudo docker exec bill-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec bill-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp bill-test-php:/var/www/output.xml phpcs-bill.xml
-    - sudo docker cp bill-test-php:/var/www/test.xml phpunit-bill.xml
   after_script:
     - sudo docker rm -f bill-test-php
   artifacts:
     paths:
       - "*.xml"
-
-staging_deploy_bill:
-  stage: staging-deploy
-  needs: [staging_test_bill]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "staging"
-      changes:
-        - "bill/*"
-        - "bill/*/*"
-        - "bill/*/*/*"
-  tags:
-    - staging
-  script:
-    - cd /home/admin/docker.collect.verything/bill && sudo -E docker compose up -d
 
 staging_scan_bill:
   stage: staging-scan
@@ -406,9 +394,9 @@ staging_scan_bill:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-bill:latest
 
-staging_unit_test_bill:
-  stage: staging-unit-test
-  needs: [staging_deploy_bill]
+staging_deploy_bill:
+  stage: staging-deploy
+  needs: [staging_test_bill]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -419,7 +407,7 @@ staging_unit_test_bill:
   tags:
     - staging
   script:
-    - sudo docker exec bill-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/bill && sudo -E docker compose up -d
 
 staging_build_cart:
   stage: staging-build
@@ -451,16 +439,43 @@ staging_test_cart:
   tags:
     - staging
   script:
-    - sudo docker run -d --name cart-test-php collectandverything-cart:latest
+    - sudo docker run -d --network=collectandverything --name cart-test-php collectandverything-cart:latest
+    - sudo docker exec cart-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f cart-test-php
+
+staging_code_quality_cart:
+  stage: staging-code-quality
+  allow_failure: false
+  needs: [staging_build_cart]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+  tags:
+    - staging
+  script:
+    - sudo docker run -d --network=collectandverything --name cart-test-php collectandverything-cart:latest
     - sudo docker exec cart-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec cart-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp cart-test-php:/var/www/output.xml phpcs-cart.xml
-    - sudo docker cp cart-test-php:/var/www/test.xml phpunit-cart.xml
   after_script:
     - sudo docker rm -f cart-test-php
   artifacts:
     paths:
       - "*.xml"
+
+staging_scan_cart:
+  stage: staging-scan
+  needs: [staging_build_cart]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "cart/*"
+        - "cart/*/*"
+        - "cart/*/*/*"
+  tags:
+    - staging
+  script:
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-cart:lates
 
 staging_deploy_cart:
   stage: staging-deploy
@@ -476,36 +491,6 @@ staging_deploy_cart:
     - staging
   script:
     - cd /home/admin/docker.collect.verything/cart && sudo -E docker compose up -d
-
-staging_scan_cart:
-  stage: staging-scan
-  needs: [staging_build_cart]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "staging"
-      changes:
-        - "cart/*"
-        - "cart/*/*"
-        - "cart/*/*/*"
-  tags:
-    - staging
-  script:
-    - sudo trivy image --severity CRITICAL,HIGH collectandverything-cart:latest
-
-staging_unit_test_cart:
-  stage: staging-unit-test
-  needs: [staging_deploy_cart]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "staging"
-      changes:
-        - "cart/*"
-        - "cart/*/*"
-        - "cart/*/*/*"
-  tags:
-    - staging
-  script:
-    - sudo docker exec cart-php /bin/bash -c 'php artisan test'
 
 staging_build_dashboard:
   stage: staging-build
@@ -551,31 +536,28 @@ staging_test_employee:
   tags:
     - staging
   script:
-    - sudo docker run -d --name employee-test-php collectandverything-employee:latest
+    - sudo docker run -d --network=collectandverything --name employee-test-php collectandverything-employee:latest
+    - sudo docker exec employee-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f employee-test-php
+
+staging_code_quality_employee:
+  stage: staging-code-quality
+  allow_failure: false
+  needs: [staging_build_employee]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+  tags:
+    - staging
+  script:
+    - sudo docker run -d --network=collectandverything --name employee-test-php collectandverything-employee:latest
     - sudo docker exec employee-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec employee-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp employee-test-php:/var/www/output.xml phpcs-employee.xml
-    - sudo docker cp employee-test-php:/var/www/test.xml phpunit-employee.xml
   after_script:
     - sudo docker rm -f employee-test-php
   artifacts:
     paths:
       - "*.xml"
-
-staging_deploy_employee:
-  stage: staging-deploy
-  needs: [staging_test_employee]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "staging"
-      changes:
-        - "employee/*"
-        - "employee/*/*"
-        - "employee/*/*/*"
-  tags:
-    - staging
-  script:
-    - cd /home/admin/docker.collect.verything/employee && sudo -E docker compose up -d
 
 staging_scan_employee:
   stage: staging-scan
@@ -592,9 +574,9 @@ staging_scan_employee:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-employee:latest
 
-staging_unit_test_employee:
-  stage: staging-unit-test
-  needs: [staging_deploy_employee]
+staging_deploy_employee:
+  stage: staging-deploy
+  needs: [staging_test_employee]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -605,7 +587,7 @@ staging_unit_test_employee:
   tags:
     - staging
   script:
-    - sudo docker exec employee-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/employee && sudo -E docker compose up -d
 
 staging_build_image:
   stage: staging-build
@@ -637,31 +619,28 @@ staging_test_image:
   tags:
     - staging
   script:
-    - sudo docker run -d --name image-test-php collectandverything-image:latest
+    - sudo docker run -d --network=collectandverything --name image-test-php collectandverything-image:latest
+    - sudo docker exec image-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f image-test-php
+
+staging_code_quality_image:
+  stage: staging-code-quality
+  allow_failure: false
+  needs: [staging_build_image]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+  tags:
+    - staging
+  script:
+    - sudo docker run -d --network=collectandverything --name image-test-php collectandverything-image:latest
     - sudo docker exec image-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec image-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp image-test-php:/var/www/output.xml phpcs-image.xml
-    - sudo docker cp image-test-php:/var/www/test.xml phpunit-image.xml
   after_script:
     - sudo docker rm -f image-test-php
   artifacts:
     paths:
       - "*.xml"
-
-staging_deploy_image:
-  stage: staging-deploy
-  needs: [staging_test_image]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "staging"
-      changes:
-        - "image/*"
-        - "image/*/*"
-        - "image/*/*/*"
-  tags:
-    - staging
-  script:
-    - cd /home/admin/docker.collect.verything/image && sudo -E docker compose up -d
 
 staging_scan_image:
   stage: staging-scan
@@ -678,9 +657,9 @@ staging_scan_image:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-image:latest
 
-staging_unit_test_image:
-  stage: staging-unit-test
-  needs: [staging_deploy_image]
+staging_deploy_image:
+  stage: staging-deploy
+  needs: [staging_test_image]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -691,7 +670,7 @@ staging_unit_test_image:
   tags:
     - staging
   script:
-    - sudo docker exec image-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/image && sudo -E docker compose up -d
 
 staging_build_mail:
   stage: staging-build
@@ -723,31 +702,28 @@ staging_test_mail:
   tags:
     - staging
   script:
-    - sudo docker run -d --name mail-test-php collectandverything-mail:latest
+    - sudo docker run -d --network=collectandverything --name mail-test-php collectandverything-mail:latest
+    - sudo docker exec mail-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f mail-test-php
+
+staging_code_quality_mail:
+  stage: staging-code-quality
+  allow_failure: false
+  needs: [staging_build_mail]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+  tags:
+    - staging
+  script:
+    - sudo docker run -d --network=collectandverything --name mail-test-php collectandverything-mail:latest
     - sudo docker exec mail-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec mail-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp mail-test-php:/var/www/output.xml phpcs-mail.xml
-    - sudo docker cp mail-test-php:/var/www/test.xml phpunit-mail.xml
   after_script:
     - sudo docker rm -f mail-test-php
   artifacts:
     paths:
       - "*.xml"
-
-staging_deploy_mail:
-  stage: staging-deploy
-  needs: [staging_test_mail]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "staging"
-      changes:
-        - "mail/*"
-        - "mail/*/*"
-        - "mail/*/*/*"
-  tags:
-    - staging
-  script:
-    - cd /home/admin/docker.collect.verything/mail && sudo -E docker compose up -d
 
 staging_scan_mail:
   stage: staging-scan
@@ -764,9 +740,9 @@ staging_scan_mail:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-mail:latest
 
-staging_unit_test_mail:
-  stage: staging-unit-test
-  needs: [staging_deploy_mail]
+staging_deploy_mail:
+  stage: staging-deploy
+  needs: [staging_test_mail]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -777,7 +753,7 @@ staging_unit_test_mail:
   tags:
     - staging
   script:
-    - sudo docker exec mail-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/mail && sudo -E docker compose up -d
 
 staging_build_order:
   stage: staging-build
@@ -809,31 +785,28 @@ staging_test_order:
   tags:
     - staging
   script:
-    - sudo docker run -d --name order-test-php collectandverything-order:latest
+    - sudo docker run -d --network=collectandverything --name order-test-php collectandverything-order:latest
+    - sudo docker exec order-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f order-test-php
+
+staging_code_quality_order:
+  stage: staging-code-quality
+  allow_failure: false
+  needs: [staging_build_order]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+  tags:
+    - staging
+  script:
+    - sudo docker run -d --network=collectandverything --name order-test-php collectandverything-order:latest
     - sudo docker exec order-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec order-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp order-test-php:/var/www/output.xml phpcs-order.xml
-    - sudo docker cp order-test-php:/var/www/test.xml phpunit-order.xml
   after_script:
     - sudo docker rm -f order-test-php
   artifacts:
     paths:
       - "*.xml"
-
-staging_deploy_order:
-  stage: staging-deploy
-  needs: [staging_test_order]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "staging"
-      changes:
-        - "order/*"
-        - "order/*/*"
-        - "order/*/*/*"
-  tags:
-    - staging
-  script:
-    - cd /home/admin/docker.collect.verything/order && sudo -E docker compose up -d
 
 staging_scan_order:
   stage: staging-scan
@@ -850,9 +823,9 @@ staging_scan_order:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-order:latest
 
-staging_unit_test_order:
-  stage: staging-unit-test
-  needs: [staging_deploy_order]
+staging_deploy_order:
+  stage: staging-deploy
+  needs: [staging_test_order]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -863,7 +836,7 @@ staging_unit_test_order:
   tags:
     - staging
   script:
-    - sudo docker exec order-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/order && sudo -E docker compose up -d
 
 staging_build_product:
   stage: staging-build
@@ -895,31 +868,28 @@ staging_test_product:
   tags:
     - staging
   script:
-    - sudo docker run -d --name product-test-php collectandverything-product:latest
+    - sudo docker run -d --network=collectandverything --name product-test-php collectandverything-product:latest
+    - sudo docker exec product-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f product-test-php
+
+staging_code_quality_product:
+  stage: staging-code-quality
+  allow_failure: false
+  needs: [staging_build_product]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+  tags:
+    - staging
+  script:
+    - sudo docker run -d --network=collectandverything --name product-test-php collectandverything-product:latest
     - sudo docker exec product-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec product-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp product-test-php:/var/www/output.xml phpcs-product.xml
-    - sudo docker cp product-test-php:/var/www/test.xml phpunit-product.xml
   after_script:
     - sudo docker rm -f product-test-php
   artifacts:
     paths:
       - "*.xml"
-
-staging_deploy_product:
-  stage: staging-deploy
-  needs: [staging_test_product]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "staging"
-      changes:
-        - "product/*"
-        - "product/*/*"
-        - "product/*/*/*"
-  tags:
-    - staging
-  script:
-    - cd /home/admin/docker.collect.verything/product && sudo -E docker compose up -d
 
 staging_scan_product:
   stage: staging-scan
@@ -936,9 +906,9 @@ staging_scan_product:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-product:latest
 
-staging_unit_test_product:
-  stage: staging-unit-test
-  needs: [staging_deploy_product]
+staging_deploy_product:
+  stage: staging-deploy
+  needs: [staging_test_product]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -949,7 +919,7 @@ staging_unit_test_product:
   tags:
     - staging
   script:
-    - sudo docker exec product-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/product && sudo -E docker compose up -d
 
 staging_build_store:
   stage: staging-build
@@ -981,31 +951,28 @@ staging_test_store:
   tags:
     - staging
   script:
-    - sudo docker run -d --name store-test-php collectandverything-store:latest
+    - sudo docker run -d --network=collectandverything --name store-test-php collectandverything-store:latest
+    - sudo docker exec store-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f store-test-php
+
+staging_code_quality_store:
+  stage: staging-code-quality
+  allow_failure: false
+  needs: [staging_build_store]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+  tags:
+    - staging
+  script:
+    - sudo docker run -d --network=collectandverything --name store-test-php collectandverything-store:latest
     - sudo docker exec store-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec store-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp store-test-php:/var/www/output.xml phpcs-store.xml
-    - sudo docker cp store-test-php:/var/www/test.xml phpunit-store.xml
   after_script:
     - sudo docker rm -f store-test-php
   artifacts:
     paths:
       - "*.xml"
-
-staging_deploy_store:
-  stage: staging-deploy
-  needs: [staging_test_store]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "staging"
-      changes:
-        - "store/*"
-        - "store/*/*"
-        - "store/*/*/*"
-  tags:
-    - staging
-  script:
-    - cd /home/admin/docker.collect.verything/store && sudo -E docker compose up -d
 
 staging_scan_store:
   stage: staging-scan
@@ -1022,9 +989,9 @@ staging_scan_store:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-store:latest
 
-staging_unit_test_store:
-  stage: staging-unit-test
-  needs: [staging_deploy_store]
+staging_deploy_store:
+  stage: staging-deploy
+  needs: [staging_test_store]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -1035,7 +1002,7 @@ staging_unit_test_store:
   tags:
     - staging
   script:
-    - sudo docker exec store-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/store && sudo -E docker compose up -d
 
 staging_build_user:
   stage: staging-build
@@ -1067,31 +1034,28 @@ staging_test_user:
   tags:
     - staging
   script:
-    - sudo docker run -d --name user-test-php collectandverything-user:latest
+    - sudo docker run -d --network=collectandverything --name user-test-php collectandverything-user:latest
+    - sudo docker exec user-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f user-test-php
+
+staging_code_quality_user:
+  stage: staging-code-quality
+  allow_failure: false
+  needs: [staging_build_user]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+  tags:
+    - staging
+  script:
+    - sudo docker run -d --network=collectandverything --name user-test-php collectandverything-user:latest
     - sudo docker exec user-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec user-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp user-test-php:/var/www/output.xml phpcs-user.xml
-    - sudo docker cp user-test-php:/var/www/test.xml phpunit-user.xml
   after_script:
     - sudo docker rm -f user-test-php
   artifacts:
     paths:
       - "*.xml"
-
-staging_deploy_user:
-  stage: staging-deploy
-  needs: [staging_test_user]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "staging"
-      changes:
-        - "user/*"
-        - "user/*/*"
-        - "user/*/*/*"
-  tags:
-    - staging
-  script:
-    - cd /home/admin/docker.collect.verything/user && sudo -E docker compose up -d
 
 staging_scan_user:
   stage: staging-scan
@@ -1108,9 +1072,9 @@ staging_scan_user:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-user:latest
 
-staging_unit_test_user:
-  stage: staging-unit-test
-  needs: [staging_deploy_user]
+staging_deploy_user:
+  stage: staging-deploy
+  needs: [staging_test_user]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -1121,7 +1085,7 @@ staging_unit_test_user:
   tags:
     - staging
   script:
-    - sudo docker exec user-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/user && sudo -E docker compose up -d
 
 staging_build_payment:
   stage: staging-build
@@ -1153,31 +1117,28 @@ staging_test_payment:
   tags:
     - staging
   script:
-    - sudo docker run -d --name payment-test-php collectandverything-payment:latest
+    - sudo docker run -d --network=collectandverything --name payment-test-php collectandverything-payment:latest
+    - sudo docker exec payment-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f payment-test-php
+
+staging_code_quality_payment:
+  stage: staging-code-quality
+  allow_failure: false
+  needs: [staging_build_payment]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+  tags:
+    - staging
+  script:
+    - sudo docker run -d --network=collectandverything --name payment-test-php collectandverything-payment:latest
     - sudo docker exec payment-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec payment-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp payment-test-php:/var/www/output.xml phpcs-payment.xml
-    - sudo docker cp payment-test-php:/var/www/test.xml phpunit-payment.xml
   after_script:
     - sudo docker rm -f payment-test-php
   artifacts:
     paths:
       - "*.xml"
-
-staging_deploy_payment:
-  stage: staging-deploy
-  needs: [staging_test_payment]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "staging"
-      changes:
-        - "payment/*"
-        - "payment/*/*"
-        - "payment/*/*/*"
-  tags:
-    - staging
-  script:
-    - cd /home/admin/docker.collect.verything/payment && sudo -E docker compose up -d
 
 staging_scan_payment:
   stage: staging-scan
@@ -1194,9 +1155,9 @@ staging_scan_payment:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-payment:latest
 
-staging_unit_test_payment:
-  stage: staging-unit-test
-  needs: [staging_deploy_payment]
+staging_deploy_payment:
+  stage: staging-deploy
+  needs: [staging_test_payment]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
@@ -1207,7 +1168,7 @@ staging_unit_test_payment:
   tags:
     - staging
   script:
-    - sudo docker exec payment-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/payment && sudo -E docker compose up -d
 
 staging_build_vitrine:
   stage: staging-build
@@ -1236,7 +1197,6 @@ staging_rabbitmq:
     - staging
   script:
     - cd /home/admin/docker.collect.verything/rabbitmq && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
-
 
 production-pull-job:
   stage: production-pull
@@ -1316,31 +1276,28 @@ production_test_address:
   tags:
     - production
   script:
-    - sudo docker run -d --name address-test-php collectandverything-address:latest
+    - sudo docker run -d --network=collectandverything --name address-test-php collectandverything-address:latest
+    - sudo docker exec address-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f address-test-php
+
+production_code_quality_address:
+  stage: production-code-quality
+  allow_failure: false
+  needs: [production_build_address]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --network=collectandverything --name address-test-php collectandverything-address:latest
     - sudo docker exec address-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    #    - sudo docker exec address-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp address-test-php:/var/www/output.xml phpcs-address.xml
-  #    - sudo docker cp address-test-php:/var/www/test.xml phpunit-address.xml
   after_script:
     - sudo docker rm -f address-test-php
   artifacts:
     paths:
       - "*.xml"
-
-production_deploy_address:
-  stage: production-deploy
-  needs: [production_test_address]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "address/*"
-        - "address/*/*"
-        - "address/*/*/*"
-  tags:
-    - production
-  script:
-    - cd /home/admin/docker.collect.verything/address && sudo -E docker compose up -d
 
 production_scan_address:
   stage: production-scan
@@ -1357,9 +1314,9 @@ production_scan_address:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-address:latest
 
-production_unit_test_address:
-  stage: production-unit-test
-  needs: [production_deploy_address]
+production_deploy_address:
+  stage: production-deploy
+  needs: [production_test_address]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -1370,7 +1327,7 @@ production_unit_test_address:
   tags:
     - production
   script:
-    - sudo docker exec address-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/address && sudo -E docker compose up -d
 
 production_build_admin:
   stage: production-build
@@ -1402,31 +1359,28 @@ production_test_admin:
   tags:
     - production
   script:
-    - sudo docker run -d --name admin-test-php collectandverything-admin:latest
+    - sudo docker run -d --network=collectandverything --name admin-test-php collectandverything-admin:latest
+    - sudo docker exec admin-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f admin-test-php
+
+production_code_quality_admin:
+  stage: production-code-quality
+  allow_failure: false
+  needs: [production_build_admin]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --network=collectandverything --name admin-test-php collectandverything-admin:latest
     - sudo docker exec admin-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec admin-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp admin-test-php:/var/www/output.xml phpcs-admin.xml
-    - sudo docker cp admin-test-php:/var/www/test.xml phpunit-admin.xml
   after_script:
     - sudo docker rm -f admin-test-php
   artifacts:
     paths:
       - "*.xml"
-
-production_deploy_admin:
-  stage: production-deploy
-  needs: [production_test_admin]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "admin/*"
-        - "admin/*/*"
-        - "admin/*/*/*"
-  tags:
-    - production
-  script:
-    - cd /home/admin/docker.collect.verything/admin && sudo -E docker compose up -d
 
 production_scan_admin:
   stage: production-scan
@@ -1443,9 +1397,9 @@ production_scan_admin:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-admin:latest
 
-production_unit_test_admin:
-  stage: production-unit-test
-  needs: [production_deploy_admin]
+production_deploy_admin:
+  stage: production-deploy
+  needs: [production_test_admin]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -1456,7 +1410,7 @@ production_unit_test_admin:
   tags:
     - production
   script:
-    - sudo docker exec admin-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/admin && sudo -E docker compose up -d
 
 production_build_api:
   stage: production-build
@@ -1488,31 +1442,28 @@ production_test_api:
   tags:
     - production
   script:
-    - sudo docker run -d --name api-test-php collectandverything-api:latest
+    - sudo docker run -d --network=collectandverything --name api-test-php collectandverything-api:latest
+    - sudo docker exec api-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f api-test-php
+
+production_code_quality_api:
+  stage: production-code-quality
+  allow_failure: false
+  needs: [production_build_api]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --network=collectandverything --name api-test-php collectandverything-api:latest
     - sudo docker exec api-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec api-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp api-test-php:/var/www/output.xml phpcs-api.xml
-    - sudo docker cp api-test-php:/var/www/test.xml phpunit-api.xml
   after_script:
     - sudo docker rm -f api-test-php
   artifacts:
     paths:
       - "*.xml"
-
-production_deploy_api:
-  stage: production-deploy
-  needs: [production_test_api]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "api/*"
-        - "api/*/*"
-        - "api/*/*/*"
-  tags:
-    - production
-  script:
-    - cd /home/admin/docker.collect.verything/api && sudo -E docker compose up -d
 
 production_scan_api:
   stage: production-scan
@@ -1529,9 +1480,9 @@ production_scan_api:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-api:latest
 
-production_unit_test_api:
-  stage: production-unit-test
-  needs: [production_deploy_api]
+production_deploy_api:
+  stage: production-deploy
+  needs: [production_test_api]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -1542,7 +1493,7 @@ production_unit_test_api:
   tags:
     - production
   script:
-    - sudo docker exec api-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/api && sudo -E docker compose up -d
 
 production_build_boutique:
   stage: production-build
@@ -1588,31 +1539,28 @@ production_test_bill:
   tags:
     - production
   script:
-    - sudo docker run -d --name bill-test-php collectandverything-bill:latest
+    - sudo docker run -d --network=collectandverything --name bill-test-php collectandverything-bill:latest
+    - sudo docker exec bill-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f bill-test-php
+
+production_code_quality_bill:
+  stage: production-code-quality
+  allow_failure: false
+  needs: [production_build_bill]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --network=collectandverything --name bill-test-php collectandverything-bill:latest
     - sudo docker exec bill-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec bill-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp bill-test-php:/var/www/output.xml phpcs-bill.xml
-    - sudo docker cp bill-test-php:/var/www/test.xml phpunit-bill.xml
   after_script:
     - sudo docker rm -f bill-test-php
   artifacts:
     paths:
       - "*.xml"
-
-production_deploy_bill:
-  stage: production-deploy
-  needs: [production_test_bill]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "bill/*"
-        - "bill/*/*"
-        - "bill/*/*/*"
-  tags:
-    - production
-  script:
-    - cd /home/admin/docker.collect.verything/bill && sudo -E docker compose up -d
 
 production_scan_bill:
   stage: production-scan
@@ -1629,9 +1577,9 @@ production_scan_bill:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-bill:latest
 
-production_unit_test_bill:
-  stage: production-unit-test
-  needs: [production_deploy_bill]
+production_deploy_bill:
+  stage: production-deploy
+  needs: [production_test_bill]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -1642,7 +1590,7 @@ production_unit_test_bill:
   tags:
     - production
   script:
-    - sudo docker exec bill-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/bill && sudo -E docker compose up -d
 
 production_build_cart:
   stage: production-build
@@ -1674,16 +1622,43 @@ production_test_cart:
   tags:
     - production
   script:
-    - sudo docker run -d --name cart-test-php collectandverything-cart:latest
+    - sudo docker run -d --network=collectandverything --name cart-test-php collectandverything-cart:latest
+    - sudo docker exec cart-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f cart-test-php
+
+production_code_quality_cart:
+  stage: production-code-quality
+  allow_failure: false
+  needs: [production_build_cart]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --network=collectandverything --name cart-test-php collectandverything-cart:latest
     - sudo docker exec cart-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec cart-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp cart-test-php:/var/www/output.xml phpcs-cart.xml
-    - sudo docker cp cart-test-php:/var/www/test.xml phpunit-cart.xml
   after_script:
     - sudo docker rm -f cart-test-php
   artifacts:
     paths:
       - "*.xml"
+
+production_scan_cart:
+  stage: production-scan
+  needs: [production_build_cart]
+  allow_failure: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "cart/*"
+        - "cart/*/*"
+        - "cart/*/*/*"
+  tags:
+    - production
+  script:
+    - sudo trivy image --severity CRITICAL,HIGH collectandverything-cart:lates
 
 production_deploy_cart:
   stage: production-deploy
@@ -1699,36 +1674,6 @@ production_deploy_cart:
     - production
   script:
     - cd /home/admin/docker.collect.verything/cart && sudo -E docker compose up -d
-
-production_scan_cart:
-  stage: production-scan
-  needs: [production_build_cart]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "cart/*"
-        - "cart/*/*"
-        - "cart/*/*/*"
-  tags:
-    - production
-  script:
-    - sudo trivy image --severity CRITICAL,HIGH collectandverything-cart:latest
-
-production_unit_test_cart:
-  stage: production-unit-test
-  needs: [production_deploy_cart]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "cart/*"
-        - "cart/*/*"
-        - "cart/*/*/*"
-  tags:
-    - production
-  script:
-    - sudo docker exec cart-php /bin/bash -c 'php artisan test'
 
 production_build_dashboard:
   stage: production-build
@@ -1774,31 +1719,28 @@ production_test_employee:
   tags:
     - production
   script:
-    - sudo docker run -d --name employee-test-php collectandverything-employee:latest
+    - sudo docker run -d --network=collectandverything --name employee-test-php collectandverything-employee:latest
+    - sudo docker exec employee-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f employee-test-php
+
+production_code_quality_employee:
+  stage: production-code-quality
+  allow_failure: false
+  needs: [production_build_employee]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --network=collectandverything --name employee-test-php collectandverything-employee:latest
     - sudo docker exec employee-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec employee-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp employee-test-php:/var/www/output.xml phpcs-employee.xml
-    - sudo docker cp employee-test-php:/var/www/test.xml phpunit-employee.xml
   after_script:
     - sudo docker rm -f employee-test-php
   artifacts:
     paths:
       - "*.xml"
-
-production_deploy_employee:
-  stage: production-deploy
-  needs: [production_test_employee]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "employee/*"
-        - "employee/*/*"
-        - "employee/*/*/*"
-  tags:
-    - production
-  script:
-    - cd /home/admin/docker.collect.verything/employee && sudo -E docker compose up -d
 
 production_scan_employee:
   stage: production-scan
@@ -1815,9 +1757,9 @@ production_scan_employee:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-employee:latest
 
-production_unit_test_employee:
-  stage: production-unit-test
-  needs: [production_deploy_employee]
+production_deploy_employee:
+  stage: production-deploy
+  needs: [production_test_employee]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -1828,7 +1770,7 @@ production_unit_test_employee:
   tags:
     - production
   script:
-    - sudo docker exec employee-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/employee && sudo -E docker compose up -d
 
 production_build_image:
   stage: production-build
@@ -1860,31 +1802,28 @@ production_test_image:
   tags:
     - production
   script:
-    - sudo docker run -d --name image-test-php collectandverything-image:latest
+    - sudo docker run -d --network=collectandverything --name image-test-php collectandverything-image:latest
+    - sudo docker exec image-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f image-test-php
+
+production_code_quality_image:
+  stage: production-code-quality
+  allow_failure: false
+  needs: [production_build_image]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --network=collectandverything --name image-test-php collectandverything-image:latest
     - sudo docker exec image-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec image-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp image-test-php:/var/www/output.xml phpcs-image.xml
-    - sudo docker cp image-test-php:/var/www/test.xml phpunit-image.xml
   after_script:
     - sudo docker rm -f image-test-php
   artifacts:
     paths:
       - "*.xml"
-
-production_deploy_image:
-  stage: production-deploy
-  needs: [production_test_image]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "image/*"
-        - "image/*/*"
-        - "image/*/*/*"
-  tags:
-    - production
-  script:
-    - cd /home/admin/docker.collect.verything/image && sudo -E docker compose up -d
 
 production_scan_image:
   stage: production-scan
@@ -1901,9 +1840,9 @@ production_scan_image:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-image:latest
 
-production_unit_test_image:
-  stage: production-unit-test
-  needs: [production_deploy_image]
+production_deploy_image:
+  stage: production-deploy
+  needs: [production_test_image]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -1914,7 +1853,7 @@ production_unit_test_image:
   tags:
     - production
   script:
-    - sudo docker exec image-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/image && sudo -E docker compose up -d
 
 production_build_mail:
   stage: production-build
@@ -1946,31 +1885,28 @@ production_test_mail:
   tags:
     - production
   script:
-    - sudo docker run -d --name mail-test-php collectandverything-mail:latest
+    - sudo docker run -d --network=collectandverything --name mail-test-php collectandverything-mail:latest
+    - sudo docker exec mail-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f mail-test-php
+
+production_code_quality_mail:
+  stage: production-code-quality
+  allow_failure: false
+  needs: [production_build_mail]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --network=collectandverything --name mail-test-php collectandverything-mail:latest
     - sudo docker exec mail-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec mail-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp mail-test-php:/var/www/output.xml phpcs-mail.xml
-    - sudo docker cp mail-test-php:/var/www/test.xml phpunit-mail.xml
   after_script:
     - sudo docker rm -f mail-test-php
   artifacts:
     paths:
       - "*.xml"
-
-production_deploy_mail:
-  stage: production-deploy
-  needs: [production_test_mail]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "mail/*"
-        - "mail/*/*"
-        - "mail/*/*/*"
-  tags:
-    - production
-  script:
-    - cd /home/admin/docker.collect.verything/mail && sudo -E docker compose up -d
 
 production_scan_mail:
   stage: production-scan
@@ -1987,9 +1923,9 @@ production_scan_mail:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-mail:latest
 
-production_unit_test_mail:
-  stage: production-unit-test
-  needs: [production_deploy_mail]
+production_deploy_mail:
+  stage: production-deploy
+  needs: [production_test_mail]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -2000,7 +1936,7 @@ production_unit_test_mail:
   tags:
     - production
   script:
-    - sudo docker exec mail-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/mail && sudo -E docker compose up -d
 
 production_build_order:
   stage: production-build
@@ -2032,31 +1968,28 @@ production_test_order:
   tags:
     - production
   script:
-    - sudo docker run -d --name order-test-php collectandverything-order:latest
+    - sudo docker run -d --network=collectandverything --name order-test-php collectandverything-order:latest
+    - sudo docker exec order-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f order-test-php
+
+production_code_quality_order:
+  stage: production-code-quality
+  allow_failure: false
+  needs: [production_build_order]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --network=collectandverything --name order-test-php collectandverything-order:latest
     - sudo docker exec order-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec order-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp order-test-php:/var/www/output.xml phpcs-order.xml
-    - sudo docker cp order-test-php:/var/www/test.xml phpunit-order.xml
   after_script:
     - sudo docker rm -f order-test-php
   artifacts:
     paths:
       - "*.xml"
-
-production_deploy_order:
-  stage: production-deploy
-  needs: [production_test_order]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "order/*"
-        - "order/*/*"
-        - "order/*/*/*"
-  tags:
-    - production
-  script:
-    - cd /home/admin/docker.collect.verything/order && sudo -E docker compose up -d
 
 production_scan_order:
   stage: production-scan
@@ -2073,9 +2006,9 @@ production_scan_order:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-order:latest
 
-production_unit_test_order:
-  stage: production-unit-test
-  needs: [production_deploy_order]
+production_deploy_order:
+  stage: production-deploy
+  needs: [production_test_order]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -2086,7 +2019,7 @@ production_unit_test_order:
   tags:
     - production
   script:
-    - sudo docker exec order-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/order && sudo -E docker compose up -d
 
 production_build_product:
   stage: production-build
@@ -2118,31 +2051,28 @@ production_test_product:
   tags:
     - production
   script:
-    - sudo docker run -d --name product-test-php collectandverything-product:latest
+    - sudo docker run -d --network=collectandverything --name product-test-php collectandverything-product:latest
+    - sudo docker exec product-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f product-test-php
+
+production_code_quality_product:
+  stage: production-code-quality
+  allow_failure: false
+  needs: [production_build_product]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --network=collectandverything --name product-test-php collectandverything-product:latest
     - sudo docker exec product-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec product-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp product-test-php:/var/www/output.xml phpcs-product.xml
-    - sudo docker cp product-test-php:/var/www/test.xml phpunit-product.xml
   after_script:
     - sudo docker rm -f product-test-php
   artifacts:
     paths:
       - "*.xml"
-
-production_deploy_product:
-  stage: production-deploy
-  needs: [production_test_product]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "product/*"
-        - "product/*/*"
-        - "product/*/*/*"
-  tags:
-    - production
-  script:
-    - cd /home/admin/docker.collect.verything/product && sudo -E docker compose up -d
 
 production_scan_product:
   stage: production-scan
@@ -2159,9 +2089,9 @@ production_scan_product:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-product:latest
 
-production_unit_test_product:
-  stage: production-unit-test
-  needs: [production_deploy_product]
+production_deploy_product:
+  stage: production-deploy
+  needs: [production_test_product]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -2172,7 +2102,7 @@ production_unit_test_product:
   tags:
     - production
   script:
-    - sudo docker exec product-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/product && sudo -E docker compose up -d
 
 production_build_store:
   stage: production-build
@@ -2204,31 +2134,28 @@ production_test_store:
   tags:
     - production
   script:
-    - sudo docker run -d --name store-test-php collectandverything-store:latest
+    - sudo docker run -d --network=collectandverything --name store-test-php collectandverything-store:latest
+    - sudo docker exec store-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f store-test-php
+
+production_code_quality_store:
+  stage: production-code-quality
+  allow_failure: false
+  needs: [production_build_store]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --network=collectandverything --name store-test-php collectandverything-store:latest
     - sudo docker exec store-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec store-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp store-test-php:/var/www/output.xml phpcs-store.xml
-    - sudo docker cp store-test-php:/var/www/test.xml phpunit-store.xml
   after_script:
     - sudo docker rm -f store-test-php
   artifacts:
     paths:
       - "*.xml"
-
-production_deploy_store:
-  stage: production-deploy
-  needs: [production_test_store]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "store/*"
-        - "store/*/*"
-        - "store/*/*/*"
-  tags:
-    - production
-  script:
-    - cd /home/admin/docker.collect.verything/store && sudo -E docker compose up -d
 
 production_scan_store:
   stage: production-scan
@@ -2245,9 +2172,9 @@ production_scan_store:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-store:latest
 
-production_unit_test_store:
-  stage: production-unit-test
-  needs: [production_deploy_store]
+production_deploy_store:
+  stage: production-deploy
+  needs: [production_test_store]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -2258,7 +2185,7 @@ production_unit_test_store:
   tags:
     - production
   script:
-    - sudo docker exec store-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/store && sudo -E docker compose up -d
 
 production_build_user:
   stage: production-build
@@ -2290,31 +2217,28 @@ production_test_user:
   tags:
     - production
   script:
-    - sudo docker run -d --name user-test-php collectandverything-user:latest
+    - sudo docker run -d --network=collectandverything --name user-test-php collectandverything-user:latest
+    - sudo docker exec user-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f user-test-php
+
+production_code_quality_user:
+  stage: production-code-quality
+  allow_failure: false
+  needs: [production_build_user]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --network=collectandverything --name user-test-php collectandverything-user:latest
     - sudo docker exec user-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec user-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp user-test-php:/var/www/output.xml phpcs-user.xml
-    - sudo docker cp user-test-php:/var/www/test.xml phpunit-user.xml
   after_script:
     - sudo docker rm -f user-test-php
   artifacts:
     paths:
       - "*.xml"
-
-production_deploy_user:
-  stage: production-deploy
-  needs: [production_test_user]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "user/*"
-        - "user/*/*"
-        - "user/*/*/*"
-  tags:
-    - production
-  script:
-    - cd /home/admin/docker.collect.verything/user && sudo -E docker compose up -d
 
 production_scan_user:
   stage: production-scan
@@ -2331,9 +2255,9 @@ production_scan_user:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-user:latest
 
-production_unit_test_user:
-  stage: production-unit-test
-  needs: [production_deploy_user]
+production_deploy_user:
+  stage: production-deploy
+  needs: [production_test_user]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -2344,7 +2268,7 @@ production_unit_test_user:
   tags:
     - production
   script:
-    - sudo docker exec user-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/user && sudo -E docker compose up -d
 
 production_build_payment:
   stage: production-build
@@ -2376,31 +2300,28 @@ production_test_payment:
   tags:
     - production
   script:
-    - sudo docker run -d --name payment-test-php collectandverything-payment:latest
+    - sudo docker run -d --network=collectandverything --name payment-test-php collectandverything-payment:latest
+    - sudo docker exec payment-test-php /bin/bash -c 'php artisan test'
+  after_script:
+    - sudo docker rm -f payment-test-php
+
+production_code_quality_payment:
+  stage: production-code-quality
+  allow_failure: false
+  needs: [production_build_payment]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "production"
+  tags:
+    - production
+  script:
+    - sudo docker run -d --network=collectandverything --name payment-test-php collectandverything-payment:latest
     - sudo docker exec payment-test-php /bin/bash -c 'phpcs --standard=PSR12 app/ > output.xml || true'
-    - sudo docker exec payment-test-php /bin/bash -c 'php artisan test > test.xml || true'
     - sudo docker cp payment-test-php:/var/www/output.xml phpcs-payment.xml
-    - sudo docker cp payment-test-php:/var/www/test.xml phpunit-payment.xml
   after_script:
     - sudo docker rm -f payment-test-php
   artifacts:
     paths:
       - "*.xml"
-
-production_deploy_payment:
-  stage: production-deploy
-  needs: [production_test_payment]
-  allow_failure: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == "production"
-      changes:
-        - "payment/*"
-        - "payment/*/*"
-        - "payment/*/*/*"
-  tags:
-    - production
-  script:
-    - cd /home/admin/docker.collect.verything/payment && sudo -E docker compose up -d
 
 production_scan_payment:
   stage: production-scan
@@ -2417,9 +2338,9 @@ production_scan_payment:
   script:
     - sudo trivy image --severity CRITICAL,HIGH collectandverything-payment:latest
 
-production_unit_test_payment:
-  stage: production-unit-test
-  needs: [production_deploy_payment]
+production_deploy_payment:
+  stage: production-deploy
+  needs: [production_test_payment]
   allow_failure: false
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
@@ -2430,7 +2351,7 @@ production_unit_test_payment:
   tags:
     - production
   script:
-    - sudo docker exec payment-php /bin/bash -c 'php artisan test'
+    - cd /home/admin/docker.collect.verything/payment && sudo -E docker compose up -d
 
 production_build_vitrine:
   stage: production-build
