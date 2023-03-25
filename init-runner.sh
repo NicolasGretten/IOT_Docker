@@ -48,6 +48,7 @@ cd /home/admin/docker.collect.verything/db-pgsql && sudo docker compose build &&
 cd /home/admin/docker.collect.verything/memcached && sudo docker compose build && sudo docker compose up -d
 cd /home/admin/docker.collect.verything/rabbitmq && sudo docker compose build && sudo docker compose up -d
 cd /home/admin/docker.collect.verything/proxy-staging && sudo docker compose build && sudo docker compose up -d
+cd /home/admin/docker.collect.verything/proxy && sudo docker compose build && sudo docker compose up -d
 
 create database addresses;
 create database admins;
