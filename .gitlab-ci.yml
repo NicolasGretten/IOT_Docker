@@ -104,6 +104,10 @@ staging_code_quality_address:
   needs: [staging_build_address]
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "address/*"
+        - "address/*/*"
+        - "address/*/*/*"
   tags:
     - staging
   script:
@@ -187,6 +191,10 @@ staging_code_quality_admin:
   needs: [staging_build_admin]
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "admin/*"
+        - "admin/*/*"
+        - "admin/*/*/*"
   tags:
     - staging
   script:
@@ -270,6 +278,10 @@ staging_code_quality_api:
   needs: [staging_build_api]
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "api/*"
+        - "api/*/*"
+        - "api/*/*/*"
   tags:
     - staging
   script:
@@ -367,6 +379,10 @@ staging_code_quality_bill:
   needs: [staging_build_bill]
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "bill/*"
+        - "bill/*/*"
+        - "bill/*/*/*"
   tags:
     - staging
   script:
@@ -450,6 +466,10 @@ staging_code_quality_cart:
   needs: [staging_build_cart]
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "cart/*"
+        - "cart/*/*"
+        - "cart/*/*/*"
   tags:
     - staging
   script:
@@ -547,6 +567,10 @@ staging_code_quality_employee:
   needs: [staging_build_employee]
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "employee/*"
+        - "employee/*/*"
+        - "employee/*/*/*"
   tags:
     - staging
   script:
@@ -630,6 +654,10 @@ staging_code_quality_image:
   needs: [staging_build_image]
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "image/*"
+        - "image/*/*"
+        - "image/*/*/*"
   tags:
     - staging
   script:
@@ -713,6 +741,10 @@ staging_code_quality_mail:
   needs: [staging_build_mail]
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "mail/*"
+        - "mail/*/*"
+        - "mail/*/*/*"
   tags:
     - staging
   script:
@@ -796,6 +828,10 @@ staging_code_quality_order:
   needs: [staging_build_order]
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "order/*"
+        - "order/*/*"
+        - "order/*/*/*"
   tags:
     - staging
   script:
@@ -879,6 +915,10 @@ staging_code_quality_product:
   needs: [staging_build_product]
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "product/*"
+        - "product/*/*"
+        - "product/*/*/*"
   tags:
     - staging
   script:
@@ -962,6 +1002,10 @@ staging_code_quality_store:
   needs: [staging_build_store]
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "store/*"
+        - "store/*/*"
+        - "store/*/*/*"
   tags:
     - staging
   script:
@@ -1045,6 +1089,10 @@ staging_code_quality_user:
   needs: [staging_build_user]
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "user/*"
+        - "user/*/*"
+        - "user/*/*/*"
   tags:
     - staging
   script:
@@ -1128,6 +1176,10 @@ staging_code_quality_payment:
   needs: [staging_build_payment]
   rules:
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - "payment/*"
+        - "payment/*/*"
+        - "payment/*/*/*"
   tags:
     - staging
   script:
@@ -1287,6 +1339,10 @@ production_code_quality_address:
   needs: [production_build_address]
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "address/*"
+        - "address/*/*"
+        - "address/*/*/*"
   tags:
     - production
   script:
@@ -1370,6 +1426,10 @@ production_code_quality_admin:
   needs: [production_build_admin]
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "admin/*"
+        - "admin/*/*"
+        - "admin/*/*/*"
   tags:
     - production
   script:
@@ -1453,6 +1513,10 @@ production_code_quality_api:
   needs: [production_build_api]
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "api/*"
+        - "api/*/*"
+        - "api/*/*/*"
   tags:
     - production
   script:
@@ -1550,6 +1614,10 @@ production_code_quality_bill:
   needs: [production_build_bill]
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "bill/*"
+        - "bill/*/*"
+        - "bill/*/*/*"
   tags:
     - production
   script:
@@ -1633,6 +1701,10 @@ production_code_quality_cart:
   needs: [production_build_cart]
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "cart/*"
+        - "cart/*/*"
+        - "cart/*/*/*"
   tags:
     - production
   script:
@@ -1730,6 +1802,10 @@ production_code_quality_employee:
   needs: [production_build_employee]
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "employee/*"
+        - "employee/*/*"
+        - "employee/*/*/*"
   tags:
     - production
   script:
@@ -1813,6 +1889,10 @@ production_code_quality_image:
   needs: [production_build_image]
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "image/*"
+        - "image/*/*"
+        - "image/*/*/*"
   tags:
     - production
   script:
@@ -1896,6 +1976,10 @@ production_code_quality_mail:
   needs: [production_build_mail]
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "mail/*"
+        - "mail/*/*"
+        - "mail/*/*/*"
   tags:
     - production
   script:
@@ -1979,6 +2063,10 @@ production_code_quality_order:
   needs: [production_build_order]
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "order/*"
+        - "order/*/*"
+        - "order/*/*/*"
   tags:
     - production
   script:
@@ -2062,6 +2150,10 @@ production_code_quality_product:
   needs: [production_build_product]
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "product/*"
+        - "product/*/*"
+        - "product/*/*/*"
   tags:
     - production
   script:
@@ -2145,6 +2237,10 @@ production_code_quality_store:
   needs: [production_build_store]
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "store/*"
+        - "store/*/*"
+        - "store/*/*/*"
   tags:
     - production
   script:
@@ -2228,6 +2324,10 @@ production_code_quality_user:
   needs: [production_build_user]
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "user/*"
+        - "user/*/*"
+        - "user/*/*/*"
   tags:
     - production
   script:
@@ -2311,6 +2411,10 @@ production_code_quality_payment:
   needs: [production_build_payment]
   rules:
     - if: $CI_COMMIT_BRANCH == "production"
+      changes:
+        - "payment/*"
+        - "payment/*/*"
+        - "payment/*/*/*"
   tags:
     - production
   script:
