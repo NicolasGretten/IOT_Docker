@@ -66,5 +66,44 @@ create database payments;
 
 php artisan migrate --force
 
+sudo docker exec address-php /bin/bash -c 'php artisan migrate --force'
+sudo docker exec admin-php /bin/bash -c 'php artisan migrate --force'
+sudo docker exec api-php /bin/bash -c 'php artisan migrate --force'
+sudo docker exec image-php /bin/bash -c 'php artisan migrate --force'
+sudo docker exec mail-php /bin/bash -c 'php artisan migrate --force'
+sudo docker exec order-php /bin/bash -c 'php artisan migrate --force'
+sudo docker exec product-php /bin/bash -c 'php artisan migrate --force'
+sudo docker exec store-php /bin/bash -c 'php artisan migrate --force'
+sudo docker exec user-php /bin/bash -c 'php artisan migrate --force'
+sudo docker exec bill-php /bin/bash -c 'php artisan migrate --force'
+sudo docker exec payment-php /bin/bash -c 'php artisan migrate --force'
+sudo docker exec employee-php /bin/bash -c 'php artisan migrate --force'
+
+sudo docker exec address-php /bin/bash -c 'php artisan db:seed --force'
+sudo docker exec admin-php /bin/bash -c 'php artisan db:seed --force'
+sudo docker exec api-php /bin/bash -c 'php artisan db:seed --force'
+sudo docker exec image-php /bin/bash -c 'php artisan db:seed --force'
+sudo docker exec mail-php /bin/bash -c 'php artisan db:seed --force'
+sudo docker exec order-php /bin/bash -c 'php artisan db:seed --force'
+sudo docker exec product-php /bin/bash -c 'php artisan db:seed --force'
+sudo docker exec store-php /bin/bash -c 'php artisan db:seed --force'
+sudo docker exec user-php /bin/bash -c 'php artisan db:seed --force'
+sudo docker exec bill-php /bin/bash -c 'php artisan db:seed --force'
+sudo docker exec payment-php /bin/bash -c 'php artisan db:seed --force'
+sudo docker exec employee-php /bin/bash -c 'php artisan db:seed --force'
+
+sudo docker exec address-php /bin/bash -c 'php artisan migrate:rollback --force'
+sudo docker exec admin-php /bin/bash -c 'php artisan migrate:rollback --force'
+sudo docker exec api-php /bin/bash -c 'php artisan migrate:rollback --force'
+sudo docker exec image-php /bin/bash -c 'php artisan migrate:rollback --force'
+sudo docker exec mail-php /bin/bash -c 'php artisan migrate:rollback --force'
+sudo docker exec order-php /bin/bash -c 'php artisan migrate:rollback --force'
+sudo docker exec product-php /bin/bash -c 'php artisan migrate:rollback --force'
+sudo docker exec store-php /bin/bash -c 'php artisan migrate:rollback --force'
+sudo docker exec user-php /bin/bash -c 'php artisan migrate:rollback --force'
+sudo docker exec bill-php /bin/bash -c 'php artisan migrate:rollback --force'
+sudo docker exec payment-php /bin/bash -c 'php artisan migrate:rollback --force'
+sudo docker exec employee-php /bin/bash -c 'php artisan migrate:rollback --force'
+
 
 
