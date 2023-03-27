@@ -336,7 +336,7 @@ staging_build_boutique:
   tags:
     - staging
   script:
-    - cd /home/admin/docker.collect.verything/boutique && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/boutique && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 staging_build_bill:
   stage: staging-build
@@ -1571,7 +1571,7 @@ production_build_boutique:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/boutique && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/boutique && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 production_build_bill:
   stage: production-build

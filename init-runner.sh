@@ -105,7 +105,22 @@ sudo docker exec bill-php /bin/bash -c 'php artisan migrate:rollback --force'
 sudo docker exec payment-php /bin/bash -c 'php artisan migrate:rollback --force'
 sudo docker exec employee-php /bin/bash -c 'php artisan migrate:rollback --force'
 
-docker exec -i postgresql /bin/bash -c "pg_dump -U collectandverything -d addresses -d admins -d api -d carts -d employees -d images -d mails -d orders -d products -d stores -d users -d bills -d payments" > /home/admin/docker.collect.verything/backup/dump.sql
+
+
+
+git clone http://deployment:glpat-tN7ndUmxgCZrx2vdqX6e@51.178.182.214/collect-verything/back/backup.collect.verything.git backup
+
+
+#!/bin/bash
+
+# Exécution de la première commande pour effectuer la sauvegarde
+current_time=$(date "+%Y.%m.%d-%H.%M.%S")
+docker exec -i postgresql /bin/bash -c "pg_dump -U collectandverything -d addresses -d admins -d api -d carts -d employees -d images -d mails -d orders -d products -d stores -d users -d bills -d payments" > /home/admin/docker.collect.verything/backup/dump-$current_time.sql
+
+# Exécution de la deuxième commande pour pousser les modifications vers le dépô>
+cd /home/admin/backup && git add .
+cd /home/admin/backup && git commit -m "dump"
+cd /home/admin/backup && git push origin staging
 
 
 
