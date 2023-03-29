@@ -524,7 +524,7 @@ staging_build_dashboard:
   tags:
     - staging
   script:
-    - cd /home/admin/docker.collect.verything/dashboard && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/dashboard && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 staging_build_employee:
   stage: staging-build
@@ -1234,7 +1234,7 @@ staging_build_vitrine:
   tags:
     - staging
   script:
-    - cd /home/admin/docker.collect.verything/vitrine && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/vitrine && sudo cp env/.env.staging .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 staging_rabbitmq:
   stage: rabbitmq
@@ -1759,7 +1759,7 @@ production_build_dashboard:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/dashboard && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/dashboard && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 production_build_employee:
   stage: production-build
@@ -2469,7 +2469,7 @@ production_build_vitrine:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/vitrine && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/vitrine && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 production_rabbitmq:
   stage: rabbitmq

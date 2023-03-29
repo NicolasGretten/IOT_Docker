@@ -2,6 +2,7 @@ version: '3'
 services:
   react:
     container_name: vitrine
+    env_file: '.env'
     build:
       context: .
       args:

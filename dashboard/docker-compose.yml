@@ -2,6 +2,7 @@ version: '3'
 services:
   react:
     container_name: dashboard
+    env_file: '.env'
     build:
       context: .
       args:
