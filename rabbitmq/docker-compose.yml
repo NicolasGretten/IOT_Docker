@@ -7,7 +7,7 @@ services:
       - "5672:5672"
       - "15672:15672"
     environment:
-      - RABBITMQ_DEFAULT_USER=collectandverything
+      - RABBITMQ_DEFAULT_USER=groupe2
       - RABBITMQ_DEFAULT_PASS=Ym4DcUcTDc5jwB5P
     tty: true
     volumes:
@@ -16,8 +16,8 @@ services:
       - ./conf/definitions.json:/etc/rabbitmq/definitions.json:ro
 
     networks:
-      - collectandverything
+      - iot
 networks:
-  collectandverything:
+  iot:
     external: true
 

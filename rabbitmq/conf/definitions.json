@@ -2,7 +2,7 @@
 {
   "users": [
     {
-      "name": "collectandverything",
+      "name": "groupe2",
       "password": "Ym4DcUcTDc5jwB5P",
       "hashing_algorithm": "rabbit_password_hashing_sha256",
       "tags": [
@@ -18,7 +18,7 @@
   ],
   "permissions": [
     {
-      "user": "collectandverything",
+      "user": "groupe2",
       "vhost": "/",
       "configure": ".*",
       "write": ".*",
@@ -26,48 +26,11 @@
     }
   ],
   "queues":[
-    {"name":"email_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-
-    {"name":"employee_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"employee_updated","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"employee_deleted","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-
-    {"name":"admin_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"admin_updated","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"admin_deleted","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-
-    {"name":"user_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"user_updated","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"user_deleted","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-
-    {"name":"store_owner_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"store_owner_updated","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"store_owner_deleted","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"image_logo","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"image_store","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"image_product","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-
-    {"name":"store_image","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"store_logo","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"image_product","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-
-    {"name":"add_to_cart","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-
-    {"name":"product_image","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-
-    {"name":"confirm_cart","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"stripe_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"store_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"payment_intent_failed","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"payment_intent_success","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"order_create","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"order_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"bill_create","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"enable_store","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"store_subscription_created","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"capture","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"captured","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
-    {"name":"webhook","vhost":"/","durable":true,"auto_delete":false,"arguments":{}}
+    {"name":"run","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"stop","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"backward","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"forward","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"exit","vhost":"/","durable":true,"auto_delete":false,"arguments":{}}
   ],
 
   "exchanges": [

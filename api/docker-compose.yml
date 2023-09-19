@@ -11,7 +11,7 @@ services:
     volumes:
       - './conf/nginx/nginx.conf:/etc/nginx/nginx.conf'
     networks:
-      - collectandverything
+      - iot
   php-fpm:
     container_name: api-php
     env_file: '.env'
@@ -20,12 +20,12 @@ services:
       args:
         - GITLAB_BRANCH=${APP_ENV}
       dockerfile: php/dockerfile
-    image: 'collectandverything-api'
+    image: 'iot-api'
     restart: unless-stopped
     tty: true
     working_dir: /var/www
     networks:
-      - collectandverything
+      - iot
 networks:
-  collectandverything:
+  iot:
     external : true

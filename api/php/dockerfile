@@ -1,4 +1,4 @@
-FROM collectandverything-php
+FROM iot-php
 
 # Set PHP configuration
 ADD conf/php/php.ini /usr/local/etc/php/
