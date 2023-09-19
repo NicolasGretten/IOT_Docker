@@ -14,9 +14,9 @@ services:
     volumes:
       - postgres:/data/postgres/
     networks:
-      - collectandverything
+      - iot
 networks:
-  collectandverything:
+  iot:
     external: true
 volumes:
   postgres:
