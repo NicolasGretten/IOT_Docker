@@ -53,7 +53,7 @@
       "configure": ".*",
       "write": ".*",
       "read": ".*"
-    },
+    }
   ],
   "queues":[
     {"name":"left","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
