@@ -9,6 +9,24 @@
         "administrator"
       ],
       "limits": {}
+    },
+    {
+      "name": "raspberry1",
+      "password": "FHup472sWg9bC4",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [
+        "administrator"
+      ],
+      "limits": {}
+    },
+    {
+      "name": "raspberry2",
+      "password": "HFpu2479sWbCg4",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [
+        "administrator"
+      ],
+      "limits": {}
     }
   ],
   "vhosts": [
@@ -23,10 +41,23 @@
       "configure": ".*",
       "write": ".*",
       "read": ".*"
-    }
+    },{
+      "user": "raspberry1",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    },{
+      "user": "raspberry2",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    },
   ],
   "queues":[
-    {"name":"run","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"left","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"right","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"stop","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"backward","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"forward","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
