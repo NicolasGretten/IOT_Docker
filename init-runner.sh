@@ -41,7 +41,7 @@ sudo gitlab-runner install -u gitlab-runner
 sudo gitlab-runner start
 
 # shellcheck disable=SC2164
-cd /home/admin/docker.collect.verything/images/nginx-alpine && sudo docker build -t iot-nginx . && cd /home/admin/docker.collect.verything
+cd /docker/images/nginx-alpine && sudo docker build -t iot-nginx . && cd /home/admin/docker.collect.verything
 cd /home/admin/docker.collect.verything/images/react && sudo docker build -t iot-react . && cd /home/admin/docker.collect.verything
 cd /home/admin/docker.collect.verything/images/php8.1-fpm && sudo docker build -t iot-php . && cd /home/admin/docker.collect.verything
 cd /home/admin/docker.collect.verything/db-pgsql && sudo docker compose build && sudo docker compose up -d
