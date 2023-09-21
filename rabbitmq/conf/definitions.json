@@ -63,6 +63,7 @@
     {"name":"forward","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"rfid","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"start_engine","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
+    {"name":"obstacle","vhost":"/","durable":true,"auto_delete":false,"arguments":{}},
     {"name":"exit","vhost":"/","durable":true,"auto_delete":false,"arguments":{}}
   ],
 
