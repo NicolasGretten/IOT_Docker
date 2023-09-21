@@ -13,7 +13,6 @@ services:
       - iot
   php-fpm:
     container_name: api-php
-    env_file: '.env'
     build:
       dockerfile: ./php/dockerfile
     image: 'iot-api'
