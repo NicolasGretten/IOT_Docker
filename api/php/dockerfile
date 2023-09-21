@@ -12,7 +12,7 @@ RUN rm -R /var/www
 # Clone project
 ARG GITLAB_BRANCH
 
-RUN git clone -b $GITLAB_BRANCH http://deployment:glpat-ap6yyWeFE5UsENYTfu76@51.178.182.214/collect-verything/back/api.collect.verything.git /var/www
+RUN git clone -b master https://deployment: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@github.com/NicolasGretten/IOT_Gateway.git /var/www
 
 # Setup dependencies
 RUN export COMPOSER_ALLOW_SUPERUSER=1
@@ -21,6 +21,9 @@ RUN composer install
 
 # Copy existing application directory permissions
 RUN chown -R www-data:www-data /var/www
+
+# Copy .env
+Run env/env.production /var/www/
 
 # Change scheduler.sh permission
 #RUN chmod o+x /var/www/bin/scheduler.sh

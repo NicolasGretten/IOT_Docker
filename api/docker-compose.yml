@@ -3,8 +3,7 @@ services:
   nginx:
     container_name: api-nginx
     build:
-      context: .
-      dockerfile: nginx/dockerfile
+      dockerfile: ./nginx/dockerfile
     image: 'nginx:alpine'
     restart: unless-stopped
     tty: true
@@ -16,10 +15,7 @@ services:
     container_name: api-php
     env_file: '.env'
     build:
-      context: .
-      args:
-        - GITLAB_BRANCH=${APP_ENV}
-      dockerfile: php/dockerfile
+      dockerfile: ./php/dockerfile
     image: 'iot-api'
     restart: unless-stopped
     tty: true
