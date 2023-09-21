@@ -10,8 +10,6 @@ ADD conf/supervisor/supervisord.conf /etc/supervisor/
 RUN rm -R /var/www
 
 # Clone project
-ARG GITLAB_BRANCH
-
 RUN git clone -b master https://deployment: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@github.com/NicolasGretten/IOT_Gateway.git /var/www
 
 # Setup dependencies
@@ -23,10 +21,7 @@ RUN composer install
 RUN chown -R www-data:www-data /var/www
 
 # Copy .env
-ADD env/.env.production /var/www/
-
-# Change scheduler.sh permission
-#RUN chmod o+x /var/www/bin/scheduler.sh
+ADD env/.env /var/www/
 
 # Expose port 9000 for php-fpm
 EXPOSE 9000
