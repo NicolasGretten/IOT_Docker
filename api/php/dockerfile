@@ -23,7 +23,7 @@ RUN composer install
 RUN chown -R www-data:www-data /var/www
 
 # Copy .env
-Run env/env.production /var/www/
+ADD env/.env.production /var/www/
 
 # Change scheduler.sh permission
 #RUN chmod o+x /var/www/bin/scheduler.sh
