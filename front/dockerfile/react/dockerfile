@@ -4,8 +4,9 @@ FROM iot-react:latest
 RUN rm -R /app
 
 # Clone project
-RUN git clone -b main https://deployment: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@github.com/Ustalioth/IoT-frontend.git /app
+RUN git clone -b main https://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@github.com/Ustalioth/IoT-frontend.git /app
 RUN npm i -f
+RUN npm install react-i18next
 
 RUN npm run build
 
