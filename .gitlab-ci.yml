@@ -1313,7 +1313,7 @@ production_build_address:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/address && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
+    - cd /home/admin/docker.collect.verything/address && sudo cp env/.env .env && sudo -E docker compose build --no-cache
 
 production_test_address:
   stage: production-test
@@ -1400,7 +1400,7 @@ production_build_admin:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/admin && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
+    - cd /home/admin/docker.collect.verything/admin && sudo cp env/.env .env && sudo -E docker compose build --no-cache
 
 production_test_admin:
   stage: production-test
@@ -1487,7 +1487,7 @@ production_build_api:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/api && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
+    - cd /home/admin/docker.collect.verything/api && sudo cp env/.env .env && sudo -E docker compose build --no-cache
 
 production_test_api:
   stage: production-test
@@ -1571,7 +1571,7 @@ production_build_boutique:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/boutique && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/boutique && sudo cp env/.env .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 production_build_bill:
   stage: production-build
@@ -1588,7 +1588,7 @@ production_build_bill:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/bill && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
+    - cd /home/admin/docker.collect.verything/bill && sudo cp env/.env .env && sudo -E docker compose build --no-cache
 
 production_test_bill:
   stage: production-test
@@ -1675,7 +1675,7 @@ production_build_cart:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/cart && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
+    - cd /home/admin/docker.collect.verything/cart && sudo cp env/.env .env && sudo -E docker compose build --no-cache
 
 production_test_cart:
   stage: production-test
@@ -1759,7 +1759,7 @@ production_build_dashboard:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/dashboard && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/dashboard && sudo cp env/.env .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 production_build_employee:
   stage: production-build
@@ -1776,7 +1776,7 @@ production_build_employee:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/employee && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
+    - cd /home/admin/docker.collect.verything/employee && sudo cp env/.env .env && sudo -E docker compose build --no-cache
 
 production_test_employee:
   stage: production-test
@@ -1863,7 +1863,7 @@ production_build_image:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/image && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
+    - cd /home/admin/docker.collect.verything/image && sudo cp env/.env .env && sudo -E docker compose build --no-cache
 
 production_test_image:
   stage: production-test
@@ -1950,7 +1950,7 @@ production_build_mail:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/mail && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
+    - cd /home/admin/docker.collect.verything/mail && sudo cp env/.env .env && sudo -E docker compose build --no-cache
 
 production_test_mail:
   stage: production-test
@@ -2037,7 +2037,7 @@ production_build_order:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/order && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
+    - cd /home/admin/docker.collect.verything/order && sudo cp env/.env .env && sudo -E docker compose build --no-cache
 
 production_test_order:
   stage: production-test
@@ -2124,7 +2124,7 @@ production_build_product:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/product && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
+    - cd /home/admin/docker.collect.verything/product && sudo cp env/.env .env && sudo -E docker compose build --no-cache
 
 production_test_product:
   stage: production-test
@@ -2211,7 +2211,7 @@ production_build_store:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/store && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
+    - cd /home/admin/docker.collect.verything/store && sudo cp env/.env .env && sudo -E docker compose build --no-cache
 
 production_test_store:
   stage: production-test
@@ -2298,7 +2298,7 @@ production_build_user:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/user && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
+    - cd /home/admin/docker.collect.verything/user && sudo cp env/.env .env && sudo -E docker compose build --no-cache
 
 production_test_user:
   stage: production-test
@@ -2385,7 +2385,7 @@ production_build_payment:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/payment && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache
+    - cd /home/admin/docker.collect.verything/payment && sudo cp env/.env .env && sudo -E docker compose build --no-cache
 
 production_test_payment:
   stage: production-test
@@ -2469,7 +2469,7 @@ production_build_vitrine:
   tags:
     - production
   script:
-    - cd /home/admin/docker.collect.verything/vitrine && sudo cp env/.env.production .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
+    - cd /home/admin/docker.collect.verything/vitrine && sudo cp env/.env .env && sudo -E docker compose build --no-cache && sudo -E docker compose up -d
 
 production_rabbitmq:
   stage: rabbitmq
